@@ -22,3 +22,87 @@ We think we can add some sorting and filtering features to help customers find c
 2.	Viewing cars within a specific price range to meet certain budgets.
 3.	Entering keywords to filter cars by brand or other attributes.
 
+
+### Go over your initial design.
+#### Special emphasis should be placed on how you plan to break it up
+#### MVC, presenter, file management, different input validation, testing, documentation, etc.
+
+```mermaid
+classDiagram
+
+class Main
+
+class CarRentalController
+class CarRentalView
+
+class CarService
+class CarBookingService
+class UserService
+
+class CarRepository
+class BookingRepository
+class UserRepository
+
+class Car
+class CarBooking
+class User
+class Brand
+
+Main --> CarRentalController
+CarRentalController --> CarRentalView
+CarRentalController --> CarService
+CarRentalController --> CarBookingService
+CarRentalController --> UserService
+
+CarService --> CarRepository
+CarBookingService --> BookingRepository
+UserService --> UserRepository
+
+CarBookingService --> CarService
+
+CarBooking --> Car
+CarBooking --> User
+
+Car --> Brand
+
+```
+
+* Module Breakdown
+
+| Module      | Role           | Responsibility Description                                                                 |
+|-------------|----------------|-------------------------------------------------------------------------------------------|
+| **Model**   | Entities       | - Contains data structures: `Car`, `User`, `Booking`, `Brand`                             |
+| **Repository** | Data Access   | - **Repositories**: `CarRepository`, `UserRepository`<br>- Load and persist data from files (CSV/JSON) |
+| **Service** | Business Logic | - **Services**: `CarService`, `BookingService`, `UserService`<br>- Implements sorting, filtering, and searching logic |
+| **Controller** | Input Logic | - `CarRentalController`<br>- Processes user actions and dispatches requests to services   |
+| **View**    | CLI Interface  | - `CarRentalView`<br>- Displays menu, collects user inputs, and shows results             |
+| **Main**    | Entry Point    | - `Main.java`<br>- Initializes the controller and starts the application's main loop      |
+
+* Feature Planning & Extension
+
+| Feature                    | Responsible Module | Description                                                           |
+|----------------------------|--------------------|-----------------------------------------------------------------------|
+| Sort cars by price (ascending) | `CarService`       | Use stream to sort cars                                               |
+| Filter cars by price range | `CarService`       | Implement stream or method to filter cars                             |
+| Keyword search by brand/attr | `CarService`       | Match keywords against car attributes (brand, registration number, etc.) |
+
+* File Management Strategy
+  * users.csv – stores user information
+  * cars.csv or JSON – stores car details
+* Input Validation Plan
+
+| Validation Type      | Checkpoint            | Layer Responsible       |
+|----------------------|-----------------------|-------------------------|
+| **UUID format**      | User ID parsing       | `Controller`            |
+| **Numeric checks**   | Price inputs, menu    | `Controller` / `View`   |
+| **String validity**  | Non-empty keywords    | `Controller`            |
+| **Entity existence** | Car availability      | `Service`               |
+
+* Testing Strategy
+
+| Layer         | Test Type           | Examples                                  |
+|---------------|---------------------|-------------------------------------------|
+| **Model**     | Unit Tests          | Validate `equals()`, `toString()`, constructors |
+| **Service**   | Unit Tests          | Test `sortCarsByPrice()`, `filterByPriceRange()` |
+| **Controller**| Integration Tests   | Simulate command flows (e.g., user input sequences) |
+| **Repository**| File Handling Tests | Verify parsing of CSV/JSON files (data integrity) |
