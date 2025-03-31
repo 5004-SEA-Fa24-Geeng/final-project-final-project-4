@@ -106,3 +106,121 @@ Car --> Brand
 | **Service**   | Unit Tests          | Test `sortCarsByPrice()`, `filterByPriceRange()` |
 | **Controller**| Integration Tests   | Simulate command flows (e.g., user input sequences) |
 | **Repository**| File Handling Tests | Verify parsing of CSV/JSON files (data integrity) |
+
+
+
+
+
+## How do you plan to break up the work?
+
+The development work will be strictly divided into modules according to the MVC architecture, with clear responsibilities and interfaces between modules to facilitate parallel development and subsequent integration.
+
+- Model: Responsible for defining data entities, such as Car, User, Booking, Brand.
+- Repository: Handles data persistence and file reading and writing (such as CSV or JSON files).
+- Service: Contains CarService, BookingService, and UserService, which are responsible for business logic (such as sorting, filtering, searching, etc.).
+- Controller: CarRentalController is responsible for receiving user input, coordinating the calls of various service modules, and connecting with the view layer.
+- View: Mainly implements the command line interface (CLI), which is responsible for displaying menus, collecting user input, and displaying results.
+- Main: Responsible for initializing the controller and starting the entire application main loop.
+
+
+
+### Specific division of labor
+
+#### Lucy: Backend core module development
+
+- [ ] Responsible for designing and implementing the model layer (Car, User, Booking, Brand)
+- [ ] Write the repository layer code to implement CSV/JSON file reading and writing and data persistence
+
+#### Echo: Business logic and control layer
+
+- [ ] Develop the service layer to implement business logic such as vehicle sorting, filtering, keyword search, etc. 
+- [ ] Write the control layer (CarRentalController) to process user input and coordinate various service calls
+
+#### Chichi: View layer and integration testing
+
+- [ ] Implement the view layer (CLI interface), design menus, interaction processes
+- [ ] Responsible for integration testing, debugging and document organization to ensure the smooth operation of the overall system
+
+
+
+
+
+## Teams timeline & major check-in points
+
+### Design and task decomposition (3.27 ~ 3.31)
+
+#### All Team Members
+
+- Participate in project kick-off meetings to discuss system architecture and define module interfaces.
+- Finalize design documents, assign tasks, and set up version control and collaboration tools.
+
+**Check Point:**
+
+- [ ] Complete and approve the design documentation and task breakdown.
+
+
+
+### Core Development Phase (4.1 ~ 4.7)
+
+#### Lucy
+
+Develop the model layer (data entities) and complete the repository layer for file management.
+
+**Check Point:** 
+
+- [ ] Complete initial implementation and unit tests for data models and file operations.
+
+
+
+#### Echo
+
+- Build the service layer implementing sorting, filtering, and search functionalities.
+- Develop the control layer to link user inputs with the service logic.
+
+**Check Point:**
+
+- [ ] Demonstrate a working prototype of the business logic and controller interactions.
+
+
+
+#### Chichi
+
+- Create the CLI for the view layer, including menu systems and user interaction flows.
+- Begin drafting integration test plans and initial test cases.
+
+**Check Point:**
+
+- [ ] Present an early version of the CLI interface and share test plans.
+
+
+
+### Integration & Refinement (4.8 ~ 4.10)
+
+#### All Team Members
+
+- Integrate the individual modules into a cohesive system.
+- Conduct integration testing to ensure all components work together seamlessly.
+
+**Check Point**:
+
+- [ ] A fully integrated demo is completed with all core features functioning.
+
+
+
+### Final Testing and Documentation (4.11 ~ 4.13)
+
+#### All Team Members
+
+- Perform comprehensive system testing, debugging, and performance optimization.
+- Finalize project documentation and prepare for the demo.
+
+**Check Point:**
+
+- [ ] Confirm that the system is bug-free and the documentation is complete and up-to-date.
+
+
+
+### Project Submission
+
+- Ensure the project is finalized and all components have been thoroughly tested and documented.
+- Submit the project by the deadline, with a buffer period for any final adjustments.
