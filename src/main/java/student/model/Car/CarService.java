@@ -29,4 +29,29 @@ public class CarService {
         return carRepository.getAllCars();
     }
 
+    /**
+     * Retrieves a specific car by its registration number.
+     *
+     * @param regNumber The registration number of the car to retrieve
+     * @return The car with the specified registration number
+     * @throws IllegalStateException if no car with the given registration number is found
+     */
+    public Car getCar(String regNumber) {
+        return getAllCars().stream()
+                .filter(car -> regNumber.equals(car.getRegNumber()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        String.format("Car with reg %s not found", regNumber)));
+    }
+
+    /**
+     * Retrieves all electric cars in the system.
+     *
+     * @return A list containing all electric cars
+     */
+    public List<Car> getAllElectricCars() {
+        return getAllCars().stream()
+                .filter(Car::isElectric)
+                .collect(Collectors.toList());
+    }
 }
