@@ -130,7 +130,7 @@ The development work will be strictly divided into modules according to the MVC 
 
 - [ ] Responsible for designing and implementing the model layer (Car, User, Booking, Brand)
 - [ ] Write the repository layer code to implement CSV/JSON file reading and writing and data persistence
-- Model: User
+- Model: Car
 
 #### Echo: Business logic and control layer
 
@@ -142,7 +142,7 @@ The development work will be strictly divided into modules according to the MVC 
 
 - [ ] Implement the view layer (CLI interface), design menus, interaction processes
 - [ ] Responsible for integration testing, debugging and document organization to ensure the smooth operation of the overall system
-- Model: Car
+- Model: User
 
 
 
