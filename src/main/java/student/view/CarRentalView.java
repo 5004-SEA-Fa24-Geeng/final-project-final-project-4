@@ -1,5 +1,6 @@
 package student.view;
 
+import student.model.Booking.CarBooking;
 import student.model.Booking.CarBookingService;
 import student.model.Car.Car;
 import student.model.User.User;
@@ -138,5 +139,19 @@ public class CarRentalView {
         } else {
             cars.forEach(System.out::println);
         }
+    }
+
+    /**
+     * Displays all bookings in the system.
+     *
+     * @param bookingService The booking service to use for retrieving bookings
+     */
+    public void displayAllBookings(CarBookingService bookingService) {
+        List<CarBooking> bookings = bookingService.getBookings();
+        if (bookings.isEmpty()) {
+            System.out.println("No bookings available 😕");
+            return;
+        }
+        bookings.forEach(System.out::println);
     }
 }
