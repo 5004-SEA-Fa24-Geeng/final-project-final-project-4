@@ -53,6 +53,7 @@ public class CarRentalController {
                 case 4 -> view.displayAvailableCars(bookingService, false);
                 case 5 -> view.displayAvailableCars(bookingService, true);
                 case 6 -> view.displayAllUsers(userService);
+                case 7 -> view.displayCarsSortedByPrice(carService);
                 case 0 -> running = false;
                 default -> view.displayInvalidOption();
             }

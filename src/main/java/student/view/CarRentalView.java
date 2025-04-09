@@ -3,6 +3,7 @@ package student.view;
 import student.model.Booking.CarBooking;
 import student.model.Booking.CarBookingService;
 import student.model.Car.Car;
+import student.model.Car.CarService;
 import student.model.User.User;
 import student.model.User.UserService;
 
@@ -153,5 +154,16 @@ public class CarRentalView {
             return;
         }
         bookings.forEach(System.out::println);
+    }
+
+    /**
+     * Displays all cars sorted by their rental price in ascending order.
+     *
+     * @param carService The car service to use for retrieving and sorting cars
+     */
+    public void displayCarsSortedByPrice(CarService carService) {
+        List<Car> cars = carService.sortCarsByPrice();
+        System.out.println("\n🚗 Cars sorted by rental price (ascending):");
+        cars.forEach(System.out::println);
     }
 }
