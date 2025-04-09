@@ -36,4 +36,26 @@ public class CarRentalController {
         this.userService = userService;
         this.view = view;
     }
+
+    /**
+     * Runs the car rental system application.
+     * Displays the menu and processes user input until the user chooses to exit.
+     */
+    public void run() {
+        boolean running = true;
+        while (running) {
+            view.displayMenu();
+            int option = view.getUserOption();
+            switch (option) {
+                case 1 -> view.bookCar(userService, bookingService);
+                case 2 -> view.displayUserBookings(userService, bookingService);
+                case 3 -> view.displayAllBookings(bookingService);
+                case 4 -> view.displayAvailableCars(bookingService, false);
+                case 5 -> view.displayAvailableCars(bookingService, true);
+                case 6 -> view.displayAllUsers(userService);
+                case 0 -> running = false;
+                default -> view.displayInvalidOption();
+            }
+        }
+    }
 }
