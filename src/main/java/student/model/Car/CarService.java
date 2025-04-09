@@ -1,5 +1,6 @@
 package student.model.Car;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,17 @@ public class CarService {
     public List<Car> getAllElectricCars() {
         return getAllCars().stream()
                 .filter(Car::isElectric)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Sorts all cars by their rental price per day in ascending order.
+     *
+     * @return A list of cars sorted by rental price per day
+     */
+    public List<Car> sortCarsByPrice() {
+        return getAllCars().stream()
+                .sorted(Comparator.comparing(Car::getRentalPricePerDay))
                 .collect(Collectors.toList());
     }
 }
