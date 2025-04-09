@@ -8,22 +8,24 @@ import student.view.CarRentalView;
 import java.util.Scanner;
 
 /**
- * Controller class for the car rental application.
+ * Controller class for the car rental system.
  * <p>
- * This class connects the view with the model and service layers. It manages
- * user interaction through a menu-driven interface, allowing users to book cars,
- * view bookings, search/filter available cars, and interact with user data.
+ * This class acts as the main coordinator between the user interface (view)
+ * and the application logic (services). It provides a command-line menu-driven
+ * interface for users to interact with the system, allowing them to book cars,
+ * view bookings, filter cars, and manage users.
  * </p>
  *
+ * <p>
  * Responsibilities include:
  * <ul>
- *   <li>Displaying the main menu</li>
- *   <li>Reading user input</li>
- *   <li>Delegating actions to the appropriate service or view layer</li>
+ *     <li>Displaying the main menu</li>
+ *     <li>Interpreting user input</li>
+ *     <li>Delegating logic to appropriate services and view methods</li>
  * </ul>
+ * </p>
  */
 public class CarRentalController {
-
     private final CarService carService;
     private final CarBookingService bookingService;
     private final UserService userService;
@@ -31,12 +33,12 @@ public class CarRentalController {
     private final Scanner scanner = new Scanner(System.in);
 
     /**
-     * Constructs a CarRentalController with required service and view components.
+     * Constructs a new CarRentalController with the required service and view components.
      *
-     * @param carService      The service responsible for car-related logic
-     * @param bookingService  The service managing car bookings
-     * @param userService     The service managing user accounts
-     * @param view            The view layer responsible for user I/O
+     * @param carService     The car service to handle car-related operations
+     * @param bookingService The booking service to handle car booking logic
+     * @param userService    The user service to handle user-related operations
+     * @param view           The view used to interact with the user
      */
     public CarRentalController(CarService carService,
                                CarBookingService bookingService,
@@ -49,17 +51,26 @@ public class CarRentalController {
     }
 
     /**
-     * Runs the car rental system.
-     * Displays a command-line menu and handles user interaction
-     * until the user chooses to exit.
+     * Starts and runs the car rental application.
+     * <p>
+     * Continuously displays the menu and processes user-selected options
+     * until the user chooses to exit the program.
+     * </p>
      *
-     * Menu options include:
+     * <p>Supported operations:</p>
      * <ul>
-     *     <li>Booking a car</li>
-     *     <li>Viewing user-specific or all bookings</li>
-     *     <li>Displaying available or electric cars</li>
-     *     <li>Searching cars by price or keyword</li>
-     *     <li>Displaying all users</li>
+     *     <li>1 - Book a car</li>
+     *     <li>2 - View user's own bookings</li>
+     *     <li>3 - View all bookings</li>
+     *     <li>4 - View all available cars</li>
+     *     <li>5 - View available electric cars</li>
+     *     <li>6 - View all users</li>
+     *     <li>7 - Sort and display cars by price</li>
+     *     <li>8 - Filter and display cars by price range</li>
+     *     <li>9 - Search cars by keyword</li>
+     *     <li>10 - Export available cars to a CSV file</li>
+     *     <li>11 - Book a car and export booking to CSV</li>
+     *     <li>0 - Exit the application</li>
      * </ul>
      */
     public void run() {
@@ -77,6 +88,8 @@ public class CarRentalController {
                 case 7 -> view.displayCarsSortedByPrice(carService);
                 case 8 -> view.displayCarsByPriceRange(carService);
                 case 9 -> view.displayCarsByKeyword(carService);
+                case 10 -> view.exportAvailableCarsToCSV(bookingService);
+                case 11 -> view.bookCarAndExport(userService, bookingService);
                 case 0 -> running = false;
                 default -> view.displayInvalidOption();
             }
