@@ -114,4 +114,29 @@ public class CarRentalView {
             cars.forEach(System.out::println);
         }
     }
+
+    /**
+     * Displays all cars booked by a specific user.
+     *
+     * @param userService The user service to use for user retrieval
+     * @param bookingService The booking service to use for booking operations
+     */
+    public void displayUserBookings(UserService userService, CarBookingService bookingService) {
+        displayAllUsers(userService);
+        System.out.print("➡️ Enter user ID: ");
+        String userId = scanner.nextLine();
+
+        User user = userService.getUserById(UUID.fromString(userId));
+        if (user == null) {
+            System.out.println("❌ No user found with id " + userId);
+            return;
+        }
+
+        List<Car> cars = bookingService.getUserBookedCars(user.getId());
+        if (cars.isEmpty()) {
+            System.out.printf("❌ User %s has no booked cars.\n", user.getName());
+        } else {
+            cars.forEach(System.out::println);
+        }
+    }
 }
