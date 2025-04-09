@@ -1,7 +1,9 @@
 package student.model.Car;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -66,4 +68,41 @@ public class CarService {
                 .sorted(Comparator.comparing(Car::getRentalPricePerDay))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Retrieves cars whose rental price per day falls within a specified range.
+     *
+     * @param min The minimum rental price (inclusive)
+     * @param max The maximum rental price (inclusive)
+     * @return A list of cars within the specified price range
+     */
+    public List<Car> getCarsByPriceRange(BigDecimal min, BigDecimal max) {
+        return getAllCars().stream()
+                .filter(car -> {
+                    BigDecimal price = car.getRentalPricePerDay();
+                    return price.compareTo(min) >= 0 && price.compareTo(max) <= 0;
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Searches for cars based on a keyword. The search matches against:
+     * - registration number
+     * - brand name
+     * - the word "electric" for electric cars
+     *
+     * @param keyword The keyword to search for
+     * @return A list of cars matching the keyword
+     */
+    public List<Car> searchCars(String keyword) {
+        String lowerKeyword = keyword.toLowerCase(Locale.ROOT);
+        return getAllCars().stream()
+                .filter(car ->
+                        car.getRegNumber().toLowerCase().contains(lowerKeyword) ||
+                                car.getBrand().name().toLowerCase().contains(lowerKeyword) ||
+                                (car.isElectric() && lowerKeyword.contains("electric"))
+                )
+                .collect(Collectors.toList());
+    }
+
 }
