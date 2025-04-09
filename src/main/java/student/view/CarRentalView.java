@@ -28,4 +28,17 @@ public class CarRentalView {
         System.out.print("Select an option: ");
     }
 
+    /**
+     * Gets the user's menu option selection.
+     *
+     * @return The selected option as an integer, or -1 if input is invalid
+     */
+    public int getUserOption() {
+        try {
+            return Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
 }
