@@ -96,6 +96,12 @@ public class CarRentalView {
         }
     }
 
+    /**
+     * Exports the available cars to a CSV file named "available_cars.csv".
+     * The list of cars is sorted by their registration numbers before exporting.
+     *
+     * @param bookingService The booking service used to retrieve available cars.
+     */
     public void exportAvailableCarsToCSV(CarBookingService bookingService) {
         List<Car> cars = bookingService.getAvailableCars();
         if (cars.isEmpty()) {
@@ -121,6 +127,12 @@ public class CarRentalView {
         }
     }
 
+    /**
+     * Exports the details of a given car booking to a CSV file.
+     * The CSV file is named using the booking ID in the format "booking_{bookingId}.csv".
+     *
+     * @param booking The car booking whose details are to be exported.
+     */
     public void exportBookingToCSV(CarBooking booking) {
         File file = new File("booking_" + booking.getBookingId() + ".csv");
 
@@ -141,6 +153,14 @@ public class CarRentalView {
         }
     }
 
+    /**
+     * Books a car for a user and exports the booking details to a CSV file.
+     * The method displays available cars, prompts the user for the car registration number and user ID,
+     * performs the booking, and then calls {@link #exportBookingToCSV(CarBooking)} to export the booking.
+     *
+     * @param userService    The user service used to retrieve user details.
+     * @param bookingService The booking service used to handle booking operations.
+     */
     public void bookCarAndExport(UserService userService, CarBookingService bookingService) {
         displayAvailableCars(bookingService, false);
         System.out.print("➡️ Enter car reg number: ");
@@ -238,12 +258,24 @@ public class CarRentalView {
         bookings.forEach(System.out::println);
     }
 
+    /**
+     * Displays a list of cars sorted by rental price in ascending order.
+     * This method retrieves the sorted list from the provided car service and then prints each car.
+     *
+     * @param carService The car service used to retrieve and sort the list of cars.
+     */
     public void displayCarsSortedByPrice(CarService carService) {
         List<Car> cars = carService.sortCarsByPrice();
         System.out.println("\n🚗 Cars sorted by rental price (ascending):");
         cars.forEach(System.out::println);
     }
 
+    /**
+     * Prompts the user to input a minimum and maximum price, then retrieves and displays the cars
+     * that fall within the specified price range.
+     *
+     * @param carService The car service used to filter the list of cars based on the given price range.
+     */
     public void displayCarsByPriceRange(CarService carService) {
         try {
             System.out.print("Enter minimum price: ");
@@ -262,6 +294,12 @@ public class CarRentalView {
         }
     }
 
+    /**
+     * Prompts the user to enter a keyword and displays cars that match the keyword.
+     * The search is performed based on various attributes such as brand or registration number.
+     *
+     * @param carService The car service used to search for cars by keyword.
+     */
     public void displayCarsByKeyword(CarService carService) {
         System.out.print("Enter keyword to search (brand, reg, etc.): ");
         String keyword = scanner.nextLine().toLowerCase();
