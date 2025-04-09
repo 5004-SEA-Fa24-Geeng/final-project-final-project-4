@@ -7,6 +7,7 @@ import student.model.Car.CarService;
 import student.model.User.User;
 import student.model.User.UserService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -31,6 +32,9 @@ public class CarRentalView {
                 4. View Available Cars
                 5. View Available Electric Cars
                 6. View All Users
+                7. Sort Cars by Price (Ascending)
+                8. Filter Cars by Price Range
+                9. Search Cars by Keyword
                 0. Exit
                 ==============================
                 """);
@@ -156,14 +160,38 @@ public class CarRentalView {
         bookings.forEach(System.out::println);
     }
 
-    /**
-     * Displays all cars sorted by their rental price in ascending order.
-     *
-     * @param carService The car service to use for retrieving and sorting cars
-     */
     public void displayCarsSortedByPrice(CarService carService) {
         List<Car> cars = carService.sortCarsByPrice();
         System.out.println("\n🚗 Cars sorted by rental price (ascending):");
         cars.forEach(System.out::println);
+    }
+
+    public void displayCarsByPriceRange(CarService carService) {
+        try {
+            System.out.print("Enter minimum price: ");
+            BigDecimal min = new BigDecimal(scanner.nextLine());
+            System.out.print("Enter maximum price: ");
+            BigDecimal max = new BigDecimal(scanner.nextLine());
+
+            List<Car> cars = carService.getCarsByPriceRange(min, max);
+            if (cars.isEmpty()) {
+                System.out.println("❌ No cars found in the given price range.");
+            } else {
+                cars.forEach(System.out::println);
+            }
+        } catch (Exception e) {
+            System.out.println("❌ Invalid input for price range.");
+        }
+    }
+
+    public void displayCarsByKeyword(CarService carService) {
+        System.out.print("Enter keyword to search (brand, reg, etc.): ");
+        String keyword = scanner.nextLine().toLowerCase();
+        List<Car> cars = carService.searchCars(keyword);
+        if (cars.isEmpty()) {
+            System.out.println("❌ No cars matched the keyword.");
+        } else {
+            cars.forEach(System.out::println);
+        }
     }
 }
