@@ -41,4 +41,12 @@ public class CarRentalView {
         }
     }
 
+    /**
+     * Displays a message for invalid option selection.
+     */
+    public void displayInvalidOption() {
+        System.out.println("❌ Invalid option. Please try again.");
+    }
+
+
 }
