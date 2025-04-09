@@ -7,7 +7,11 @@ import student.model.Car.CarService;
 import student.model.User.User;
 import student.model.User.UserService;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -35,6 +39,8 @@ public class CarRentalView {
                 7. Sort Cars by Price (Ascending)
                 8. Filter Cars by Price Range
                 9. Search Cars by Keyword
+                10. Export Available Cars to CSV
+                11. Book Car and Export Booking to CSV
                 0. Exit
                 ==============================
                 """);
@@ -84,6 +90,78 @@ public class CarRentalView {
                 UUID bookingId = bookingService.bookCar(user, regNumber);
                 System.out.printf("🎉 Successfully booked car [%s] for user [%s]. Booking ID: %s\n",
                         regNumber, user.getName(), bookingId);
+            }
+        } catch (Exception e) {
+            System.out.println("❌ " + e.getMessage());
+        }
+    }
+
+    public void exportAvailableCarsToCSV(CarBookingService bookingService) {
+        List<Car> cars = bookingService.getAvailableCars();
+        if (cars.isEmpty()) {
+            System.out.println("❌ No cars available to export.");
+            return;
+        }
+
+        cars.sort(Comparator.comparing(Car::getRegNumber));
+        File file = new File("available_cars.csv");
+
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writer.println("ID,Brand,Price,Type");
+            for (Car car : cars) {
+                writer.printf("%s,%s,%.2f,%s%n",
+                        car.getRegNumber(),
+                        car.getBrand(),
+                        car.getRentalPricePerDay(),
+                        car.isElectric() ? "Electric" : "Gas");
+            }
+            System.out.println("✅ Available cars exported to available_cars.csv");
+        } catch (IOException e) {
+            System.out.println("❌ Failed to export cars: " + e.getMessage());
+        }
+    }
+
+    public void exportBookingToCSV(CarBooking booking) {
+        File file = new File("booking_" + booking.getBookingId() + ".csv");
+
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writer.println("BookingID,UserID,UserName,CarID,Brand,Price,BookingTime");
+            writer.printf("%s,%s,%s,%s,%s,%.2f,%s%n",
+                    booking.getBookingId(),
+                    booking.getUser().getId(),
+                    booking.getUser().getName(),
+                    booking.getCar().getRegNumber(),
+                    booking.getCar().getBrand(),
+                    booking.getCar().getRentalPricePerDay(),
+                    booking.getBookingTime());
+
+            System.out.printf("✅ Booking exported to %s%n", file.getName());
+        } catch (IOException e) {
+            System.out.println("❌ Failed to export booking: " + e.getMessage());
+        }
+    }
+
+    public void bookCarAndExport(UserService userService, CarBookingService bookingService) {
+        displayAvailableCars(bookingService, false);
+        System.out.print("➡️ Enter car reg number: ");
+        String regNumber = scanner.nextLine();
+
+        displayAllUsers(userService);
+        System.out.print("➡️ Enter user ID: ");
+        String userId = scanner.nextLine();
+
+        try {
+            User user = userService.getUserById(UUID.fromString(userId));
+            if (user == null) {
+                System.out.println("❌ No user found with id " + userId);
+            } else {
+                UUID bookingId = bookingService.bookCar(user, regNumber);
+                CarBooking booking = bookingService.getBookings().stream()
+                        .filter(b -> b.getBookingId().equals(bookingId))
+                        .findFirst().orElseThrow();
+
+                System.out.printf("🎉 Successfully booked car [%s] for user [%s].%n", regNumber, user.getName());
+                exportBookingToCSV(booking);
             }
         } catch (Exception e) {
             System.out.println("❌ " + e.getMessage());
