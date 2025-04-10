@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 public class CarBookingRepository {
 
-    private static final List<CarBooking> carBookings = new ArrayList<>();
+    private final List<CarBooking> carBookings = new ArrayList<>();
 
     /**
      * Returns all current bookings.
