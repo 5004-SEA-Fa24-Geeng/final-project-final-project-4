@@ -5,7 +5,7 @@ import java.util.*;
 
 public class UserFileRepository implements UserRepository {
 
-    private static final String USER_FILE_PATH = "users.csv";
+    private static final String USER_FILE_PATH = "data/users.csv";
 
     @Override
     public List<User> getUsers() {
