@@ -1,4 +1,4 @@
-package student.view;
+package student.view.cli;
 
 import student.model.Booking.CarBooking;
 import student.model.Booking.CarBookingService;
@@ -6,6 +6,7 @@ import student.model.Car.Car;
 import student.model.Car.CarService;
 import student.model.User.User;
 import student.model.User.UserService;
+import student.view.CarRentalViewInterface;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.UUID;
  * View class for the car rental system.
  * Handles user interaction and display of information.
  */
-public class CarRentalView {
+public class CarRentalCLIView implements CarRentalViewInterface {
 
     private final Scanner scanner = new Scanner(System.in);
 
@@ -41,6 +42,7 @@ public class CarRentalView {
                 9. Search Cars by Keyword
                 10. Export Available Cars to CSV
                 11. Book Car and Export Booking to CSV
+                12. Cancel Booking
                 0. Exit
                 ==============================
                 """);
@@ -310,4 +312,22 @@ public class CarRentalView {
             cars.forEach(System.out::println);
         }
     }
+
+    @Override
+    public void cancelBooking(CarBookingService bookingService) {
+        displayAllBookings(bookingService);
+        System.out.print("➡️ Enter booking ID to cancel: ");
+        String input = scanner.nextLine();
+
+        try {
+            UUID bookingId = UUID.fromString(input);
+            bookingService.cancelBooking(bookingId);
+            System.out.println("✅ Booking canceled successfully.");
+        } catch (IllegalStateException e) {
+            System.out.println("❌ " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("❌ Invalid booking ID format.");
+        }
+    }
+
 }
