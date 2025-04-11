@@ -172,4 +172,20 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         }
     }
 
+    public void handleBookCarAs(Car selectedCar, User user) {
+        if (selectedCar == null) {
+            JOptionPane.showMessageDialog(guiView, "Please select a car to book.");
+            return;
+        }
+
+        try {
+            UUID bookingId = bookingService.bookCar(user, selectedCar.getRegNumber());
+            JOptionPane.showMessageDialog(guiView, "✅ Booking successful! ID: " + bookingId);
+            guiView.showCars(bookingService.getAvailableCars());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(guiView, "❌ Booking failed: " + e.getMessage());
+        }
+    }
+
+
 }

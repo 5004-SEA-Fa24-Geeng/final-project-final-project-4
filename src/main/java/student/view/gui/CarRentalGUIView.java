@@ -115,11 +115,16 @@ public class CarRentalGUIView extends JFrame {
         viewUsersBtn.addActionListener(e -> controller.handleViewUsers());
         viewBookingsBtn.addActionListener(e -> controller.handleViewBookings());
         bookBtn.addActionListener(e -> {
+            if (currentUser == null) {
+                JOptionPane.showMessageDialog(this, "❌ Please login before booking.");
+                return;
+            }
             int row = table.getSelectedRow();
             if (row != -1 && currentDisplayedCars != null) {
-                controller.handleBookCar(currentDisplayedCars.get(row));
+                controller.handleBookCarAs(currentDisplayedCars.get(row), currentUser);
             }
         });
+
         cancelBtn.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row != -1 && currentDisplayedBookings != null) {
@@ -154,6 +159,7 @@ public class CarRentalGUIView extends JFrame {
         this.currentUser = user;
         JOptionPane.showMessageDialog(this, "👋 Welcome " + user.getName());
         statusLabel.setText("🟢 Logged in: " + user.getName());
+        statusLabel.setText("🟢 Logged in: " + user.getName() + " | Ready to book");
     }
 
 
