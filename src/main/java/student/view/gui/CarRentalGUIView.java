@@ -104,6 +104,10 @@ public class CarRentalGUIView extends JFrame {
         viewCarsBtn = createStyledButton("🚗 All Cars", "View all cars");
         viewElectricBtn = createStyledButton("🔌 Electric", "View electric cars");
 
+        searchField = new JTextField(16);
+        searchField.setPreferredSize(new Dimension(160, 28));
+        topPanel.add(searchField);
+
         topPanel.add(viewCarsBtn);
         topPanel.add(viewElectricBtn);
         topPanel.add(searchField);
@@ -175,7 +179,22 @@ public class CarRentalGUIView extends JFrame {
         viewElectricBtn.addActionListener(e -> controller.handleViewElectricCars());
         sortBtn.addActionListener(e -> controller.handleSortByPrice());
         filterBtn.addActionListener(e -> controller.handleFilterByPrice());
-        searchBtn.addActionListener(e -> controller.handleSearchByKeyword());
+        searchBtn.addActionListener(e -> {
+            String keyword = searchField.getText().trim();
+            if (!keyword.isEmpty()) {
+                controller.handleSearchByKeyword(keyword);
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter a keyword to search.");
+            }
+        });
+        searchField.addActionListener(e -> {
+            String keyword = searchField.getText().trim();
+            if (!keyword.isEmpty()) {
+                controller.handleSearchByKeyword(keyword);
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter a keyword to search.");
+            }
+        });
         exportBtn.addActionListener(e -> controller.handleExportBookings());
         registerBtn.addActionListener(e -> {
             String name = JOptionPane.showInputDialog(this, "Enter name to register:");

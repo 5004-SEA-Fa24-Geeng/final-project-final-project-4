@@ -201,4 +201,10 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         guiView.showBookings(mine);
     }
 
+    public void handleSearchByKeyword(String keyword) {
+        List<Car> result = carService.searchCars(keyword.toLowerCase());
+        guiView.showCars(result);
+    }
+
+
 }
