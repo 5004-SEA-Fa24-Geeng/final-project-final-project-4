@@ -90,6 +90,15 @@ public class CarRentalGUIView extends JFrame {
         paginationPanel.add(prevPageBtn);
         paginationPanel.add(nextPageBtn);
 
+        prevPageBtn.addActionListener(e -> {
+            if (currentPage > 0) showCarsPage(currentPage - 1);
+        });
+        nextPageBtn.addActionListener(e -> {
+            int maxPage = (int) Math.ceil((double) pagedCars.size() / PAGE_SIZE) - 1;
+            if (currentPage < maxPage) showCarsPage(currentPage + 1);
+        });
+
+
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton bookBtn = new JButton("Book Selected Car");
         JButton cancelBtn = new JButton("Cancel Selected Booking");
@@ -97,6 +106,8 @@ public class CarRentalGUIView extends JFrame {
         actionPanel.add(bookBtn);
         actionPanel.add(cancelBtn);
         actionPanel.add(exportBtn);
+
+        exportBtn.addActionListener(e -> controller.handleExportBookings());
 
         statusLabel = new JLabel("Welcome to the Car Rental System");
 
@@ -126,18 +137,25 @@ public class CarRentalGUIView extends JFrame {
         });
 
         cancelBtn.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            if (row != -1 && currentDisplayedBookings != null) {
-                controller.handleCancelBooking(currentDisplayedBookings.get(row));
+            if (currentUser == null) {
+                JOptionPane.showMessageDialog(this, "❌ Please login to cancel bookings.");
+                return;
             }
-        });
-        exportBtn.addActionListener(e -> controller.handleExportBookings());
-        prevPageBtn.addActionListener(e -> {
-            if (currentPage > 0) showCarsPage(currentPage - 1);
-        });
-        nextPageBtn.addActionListener(e -> {
-            int maxPage = (int) Math.ceil((double) pagedCars.size() / PAGE_SIZE) - 1;
-            if (currentPage < maxPage) showCarsPage(currentPage + 1);
+
+            int row = table.getSelectedRow();
+            if (row == -1 || currentDisplayedBookings == null) {
+                JOptionPane.showMessageDialog(this, "Please select a booking to cancel.");
+                return;
+            }
+
+            CarBooking booking = currentDisplayedBookings.get(row);
+
+            if (!booking.getUser().getId().equals(currentUser.getId())) {
+                JOptionPane.showMessageDialog(this, "❌ You can only cancel your own bookings.");
+                return;
+            }
+
+            controller.handleCancelBooking(booking);
         });
 
         btnRegisterUser.addActionListener(e -> {
