@@ -2,14 +2,10 @@ package student.model.Booking;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import student.model.Car.Brand;
 import student.model.Car.Car;
-import student.model.Car.CarRepository;
 import student.model.Car.CarService;
 import student.model.User.User;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
