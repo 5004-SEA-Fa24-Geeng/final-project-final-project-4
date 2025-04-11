@@ -53,7 +53,7 @@ public class CarRentalController {
     /**
      * Starts and runs the car rental application.
      * <p>
-     * Continuously displays the menu and processes user-selected options
+     * Continuously displays the menu and processes user-selected op tions
      * until the user chooses to exit the program.
      * </p>
      *

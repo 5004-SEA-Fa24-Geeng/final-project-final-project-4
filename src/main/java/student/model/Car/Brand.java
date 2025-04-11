@@ -6,13 +6,12 @@ package student.model.Car;
 public enum Brand {
     /** Tesla brand */
     TESLA,
-
-    /** Volkswagen brand */
-    VW,
-
-    /** Mercedes-Benz brand */
+    AUDI,
     MERCEDES,
-
-    /** Audi brand */
-    AUDI
+    TOYOTA,
+    HONDA,
+    BYD,
+    XIAOMI,
+    SUBARU,
+    KIA
 }
