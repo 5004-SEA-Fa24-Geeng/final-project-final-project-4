@@ -72,6 +72,17 @@ public class CarRentalGUIView extends JFrame {
         row3.add(viewUsersBtn);
         row3.add(viewBookingsBtn);
 
+        JButton btnMyBookings = new JButton("My Bookings");
+        row3.add(btnMyBookings);
+
+        btnMyBookings.addActionListener(e -> {
+            if (currentUser == null) {
+                JOptionPane.showMessageDialog(this, "❌ Please login to view your bookings.");
+                return;
+            }
+            controller.handleViewMyBookings(currentUser);
+        });
+
         topPanel.add(row1);
         topPanel.add(row2);
         topPanel.add(row3);
