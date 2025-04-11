@@ -33,7 +33,7 @@ public class CarRentalGUIView extends JFrame {
     private List<Car> currentDisplayedCars;
     private List<CarBooking> currentDisplayedBookings;
     private int currentPage = 0;
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 18;
 
     public CarRentalGUIView(CarService carService, CarBookingService bookingService, UserService userService) {
         setTitle("🚗 Car Rental System");
@@ -86,11 +86,21 @@ public class CarRentalGUIView extends JFrame {
         mainPanel.setBackground(Color.WHITE);
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        // Top bar
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // Create top panel with two rows: browsing and filtering
+        JPanel topPanel = new JPanel(new GridLayout(2, 1, 5, 5));
         topPanel.setBackground(mainPanel.getBackground());
 
-        searchField = new JTextField(15);
+        // First row: browsing buttons and search box
+        JPanel row1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row1.setBackground(mainPanel.getBackground());
+
+        // Second row: filtering/sorting
+        JPanel row2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row2.setBackground(mainPanel.getBackground());
+
+        // Create search field
+        searchField = new JTextField(16);
+        searchField.setPreferredSize(new Dimension(160, 28));
         searchField.setBackground(new Color(245, 245, 245));
         searchField.setForeground(Color.BLACK);
         searchField.setCaretColor(Color.BLACK);
@@ -98,24 +108,37 @@ public class CarRentalGUIView extends JFrame {
                 BorderFactory.createLineBorder(Color.LIGHT_GRAY),
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)));
 
+        // Styled buttons
         searchBtn = createStyledButton("🔍", "Search keyword");
         sortBtn = createStyledButton("⬆ Price", "Sort by price");
         filterBtn = createStyledButton("💰 Filter", "Filter by price range");
         viewCarsBtn = createStyledButton("🚗 All Cars", "View all cars");
         viewElectricBtn = createStyledButton("🔌 Electric", "View electric cars");
 
-        searchField = new JTextField(16);
-        searchField.setPreferredSize(new Dimension(160, 28));
-        topPanel.add(searchField);
+        // Add to respective rows
+        row1.add(viewCarsBtn);
+        row1.add(viewElectricBtn);
+        row1.add(searchField);
+        row1.add(searchBtn);
 
-        topPanel.add(viewCarsBtn);
-        topPanel.add(viewElectricBtn);
-        topPanel.add(searchField);
-        topPanel.add(searchBtn);
-        topPanel.add(filterBtn);
-        topPanel.add(sortBtn);
+        row2.add(filterBtn);
+        row2.add(sortBtn);
 
-        mainPanel.add(topPanel, BorderLayout.NORTH);
+        // Add rows to top panel
+        topPanel.add(row1);
+        topPanel.add(row2);
+
+        // Wrap the topPanel into a card-like panel
+        JPanel cardWrapper = new JPanel(new BorderLayout());
+        cardWrapper.setBackground(mainPanel.getBackground());
+        cardWrapper.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
+                new EmptyBorder(10, 15, 10, 15)
+        ));
+        cardWrapper.add(topPanel, BorderLayout.CENTER);
+
+        // Add to main panel
+        mainPanel.add(cardWrapper, BorderLayout.NORTH);
 
         // Table
         tableModel = new DefaultTableModel();
@@ -285,6 +308,14 @@ public class CarRentalGUIView extends JFrame {
         }
         int totalPages = (int) Math.ceil((double) pagedCars.size() / PAGE_SIZE);
         updatePagination(currentPage, totalPages, pagedCars.size());
+
+        statusLabel.setText(String.format(
+                "📄 Page %d of %d | Total cars: %d",
+                currentPage + 1,
+                totalPages,
+                pagedCars.size()
+        ));
+
     }
 
     public void showBookings(List<CarBooking> bookings) {
