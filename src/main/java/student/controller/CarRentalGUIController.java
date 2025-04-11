@@ -190,14 +190,15 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
     public void handleViewMyBookings(User user) {
         List<CarBooking> all = bookingService.getBookings();
         List<CarBooking> mine = all.stream()
-                .filter(b -> b.getUser().getId().equals(user.getId()))
+                .filter(b -> b.getUser().getId().equals(user.getId()) && !b.isCanceled())
                 .toList();
 
         if (mine.isEmpty()) {
-            JOptionPane.showMessageDialog(guiView, "❌ You have no bookings.");
+            JOptionPane.showMessageDialog(guiView, "❌ You have no active bookings.");
+            return;
         }
+
         guiView.showBookings(mine);
     }
-
 
 }
