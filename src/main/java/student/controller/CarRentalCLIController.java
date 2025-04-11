@@ -43,6 +43,8 @@ public class CarRentalCLIController implements CarRentalControllerInterface {
                 case 10 -> view.exportAvailableCarsToCSV(bookingService);
                 case 11 -> view.bookCarAndExport(userService, bookingService);
                 case 12 -> view.cancelBooking(bookingService);
+                case 13 -> view.registerUser(userService);
+                case 14 -> view.loginUser(userService);     
                 case 0 -> running = false;
                 default -> view.displayInvalidOption();
             }

@@ -20,4 +20,7 @@ public interface CarRentalViewInterface {
     void displayCarsByPriceRange(CarService carService);
     void displayCarsByKeyword(CarService carService);
     void cancelBooking(CarBookingService bookingService);
+    void registerUser(UserService userService);
+    void loginUser(UserService userService);
+
 }

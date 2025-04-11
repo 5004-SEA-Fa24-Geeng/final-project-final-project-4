@@ -41,4 +41,19 @@ public class UserService {
         }
         return null;
     }
+
+    public User login(String name) {
+        return userRepository.findUserByName(name);
+    }
+
+    public User register(String name) {
+        User existing = userRepository.findUserByName(name);
+        if (existing != null) {
+            throw new IllegalStateException("User already exists with name: " + name);
+        }
+        User newUser = new User(UUID.randomUUID(), name);
+        userRepository.addUser(newUser);
+        return newUser;
+    }
+
 }

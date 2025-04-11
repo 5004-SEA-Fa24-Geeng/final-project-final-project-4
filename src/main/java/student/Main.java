@@ -9,6 +9,7 @@ import student.model.Car.CarFileRepository;
 import student.model.Car.CarRepository;
 import student.model.Car.CarService;
 import student.model.User.UserArrayRepository;
+import student.model.User.UserFileRepository;
 import student.model.User.UserRepository;
 import student.model.User.UserService;
 import student.view.CarRentalViewInterface;
@@ -28,7 +29,7 @@ public class Main {
         CarBookingRepository bookingRepo = new CarBookingRepository();
         CarBookingService bookingService = new CarBookingService(bookingRepo, carService);
 
-        UserRepository userRepo = new UserArrayRepository(); // or new UserFileRepository()
+        UserRepository userRepo = new UserFileRepository(); // UserFileRepository() / UserArrayRepository
         UserService userService = new UserService(userRepo);
 
         Scanner scanner = new Scanner(System.in);

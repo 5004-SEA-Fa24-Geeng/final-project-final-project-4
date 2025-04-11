@@ -43,6 +43,8 @@ public class CarRentalCLIView implements CarRentalViewInterface {
                 10. Export Available Cars to CSV
                 11. Book Car and Export Booking to CSV
                 12. Cancel Booking
+                13. Register New User       
+                14. Login User 
                 0. Exit
                 ==============================
                 """);
@@ -329,5 +331,28 @@ public class CarRentalCLIView implements CarRentalViewInterface {
             System.out.println("❌ Invalid booking ID format.");
         }
     }
+
+    public void registerUser(UserService userService) {
+        System.out.print("Enter new user name: ");
+        String name = scanner.nextLine();
+        try {
+            User user = userService.register(name);
+            System.out.printf("✅ Registered user [%s] with ID %s%n", user.getName(), user.getId());
+        } catch (Exception e) {
+            System.out.println("❌ " + e.getMessage());
+        }
+    }
+
+    public void loginUser(UserService userService) {
+        System.out.print("Enter user name: ");
+        String name = scanner.nextLine();
+        User user = userService.login(name);
+        if (user == null) {
+            System.out.println("❌ User not found.");
+        } else {
+            System.out.printf("👋 Welcome back, %s (ID: %s)%n", user.getName(), user.getId());
+        }
+    }
+
 
 }
