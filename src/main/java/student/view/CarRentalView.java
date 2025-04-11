@@ -41,6 +41,7 @@ public class CarRentalView {
                 9. Search Cars by Keyword
                 10. Export Available Cars to CSV
                 11. Book Car and Export Booking to CSV
+                12. Cancel Booking
                 0. Exit
                 ==============================
                 """);
@@ -308,6 +309,36 @@ public class CarRentalView {
             System.out.println("❌ No cars matched the keyword.");
         } else {
             cars.forEach(System.out::println);
+        }
+    }
+
+    /**
+     * Cancels a booking based on the booking ID provided by the user.
+     * <p>
+     * This method displays all current bookings, prompts the user to input a booking ID,
+     * attempts to cancel the corresponding booking, and provides feedback to the user.
+     * <p>
+     * Error Handling:
+     * <ul>
+     *     <li>If the booking ID format is invalid (not a UUID), an error message is displayed.</li>
+     *     <li>If the booking ID does not exist or cannot be canceled, an IllegalStateException is caught and its message displayed.</li>
+     * </ul>
+     *
+     * @param bookingService The booking service used to perform the cancel operation.
+     */
+    public void cancelBooking(CarBookingService bookingService) {
+        displayAllBookings(bookingService);
+        System.out.print("➡️ Enter booking ID to cancel: ");
+        String input = scanner.nextLine();
+
+        try {
+            UUID bookingId = UUID.fromString(input);
+            bookingService.cancelBooking(bookingId);
+            System.out.println("✅ Booking canceled successfully.");
+        } catch (IllegalStateException e) {
+            System.out.println("❌ " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("❌ Invalid booking ID format.");
         }
     }
 }
