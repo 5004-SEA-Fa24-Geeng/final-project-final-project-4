@@ -1,6 +1,8 @@
 // Package: student.model.Car
 package student.model.Car;
 
+import student.model.utils.CarFilterEngine;
+
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
@@ -45,36 +47,16 @@ public class CarService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Sort all cars by rental price in ascending order.
-     */
     public List<Car> sortCarsByPrice() {
-        return getAllCars().stream()
-                .sorted(Comparator.comparing(Car::getRentalPricePerDay))
-                .collect(Collectors.toList());
+        return CarFilterEngine.sortByPrice(getAllCars());
     }
 
-    /**
-     * Filter cars within a specified price range.
-     */
     public List<Car> getCarsByPriceRange(BigDecimal min, BigDecimal max) {
-        return getAllCars().stream()
-                .filter(car -> {
-                    BigDecimal price = car.getRentalPricePerDay();
-                    return price.compareTo(min) >= 0 && price.compareTo(max) <= 0;
-                })
-                .collect(Collectors.toList());
+        return CarFilterEngine.filterByPriceRange(getAllCars(), min, max);
     }
 
-    /**
-     * Search cars by keyword matching brand, registration number, or 'electric'.
-     */
     public List<Car> searchCars(String keyword) {
-        return carRepository.getAllCars().stream()
-                .filter(car -> car.getBrand().name().toLowerCase().contains(keyword)
-                        || car.getRegNumber().toLowerCase().contains(keyword)
-                        || car.getModel().toLowerCase().contains(keyword))
-                .toList();
+        return CarFilterEngine.searchByKeyword(getAllCars(), keyword);
     }
 
 }

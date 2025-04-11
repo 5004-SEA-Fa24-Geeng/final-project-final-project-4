@@ -1,4 +1,4 @@
-package student.view;
+package student.view.cli;
 
 import student.model.Booking.CarBooking;
 import student.model.Booking.CarBookingService;
@@ -6,6 +6,7 @@ import student.model.Car.Car;
 import student.model.Car.CarService;
 import student.model.User.User;
 import student.model.User.UserService;
+import student.view.CarRentalViewInterface;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.UUID;
  * View class for the car rental system.
  * Handles user interaction and display of information.
  */
-public class CarRentalView {
+public class CarRentalCLIView implements CarRentalViewInterface {
 
     private final Scanner scanner = new Scanner(System.in);
 
@@ -42,6 +43,8 @@ public class CarRentalView {
                 10. Export Available Cars to CSV
                 11. Book Car and Export Booking to CSV
                 12. Cancel Booking
+                13. Register New User
+                14. Login User
                 0. Exit
                 ==============================
                 """);
@@ -312,20 +315,6 @@ public class CarRentalView {
         }
     }
 
-    /**
-     * Cancels a booking based on the booking ID provided by the user.
-     * <p>
-     * This method displays all current bookings, prompts the user to input a booking ID,
-     * attempts to cancel the corresponding booking, and provides feedback to the user.
-     * <p>
-     * Error Handling:
-     * <ul>
-     *     <li>If the booking ID format is invalid (not a UUID), an error message is displayed.</li>
-     *     <li>If the booking ID does not exist or cannot be canceled, an IllegalStateException is caught and its message displayed.</li>
-     * </ul>
-     *
-     * @param bookingService The booking service used to perform the cancel operation.
-     */
     public void cancelBooking(CarBookingService bookingService) {
         displayAllBookings(bookingService);
         System.out.print("➡️ Enter booking ID to cancel: ");
@@ -339,6 +328,32 @@ public class CarRentalView {
             System.out.println("❌ " + e.getMessage());
         } catch (Exception e) {
             System.out.println("❌ Invalid booking ID format.");
+        }
+    }
+
+    @Override
+    public void registerUser(UserService userService) {
+        System.out.print("Enter name to register: ");
+        String name = scanner.nextLine();
+
+        try {
+            User user = userService.register(name.trim());
+            System.out.printf("✅ Registered user [%s] with ID: %s%n", user.getName(), user.getId());
+        } catch (Exception e) {
+            System.out.println("❌ " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void loginUser(UserService userService) {
+        System.out.print("Enter name to login: ");
+        String name = scanner.nextLine();
+
+        User user = userService.login(name.trim());
+        if (user == null) {
+            System.out.println("❌ User not found.");
+        } else {
+            System.out.printf("👋 Welcome back, %s! Your ID is: %s%n", user.getName(), user.getId());
         }
     }
 }

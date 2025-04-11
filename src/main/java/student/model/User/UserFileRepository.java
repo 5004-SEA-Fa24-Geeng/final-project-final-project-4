@@ -1,37 +1,53 @@
 package student.model.User;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
+import java.io.*;
+import java.util.*;
 
-/**
- * A repository that loads users from a CSV file.
- */
 public class UserFileRepository implements UserRepository {
 
-    /**
-     * Reads users from a CSV file located at {@code src/student/users.csv}.
-     *
-     * @return a list of users
-     * @throws IllegalStateException if the file cannot be read
-     */
+    private static final String USER_FILE_PATH = "data/users.csv";
+
     @Override
     public List<User> getUsers() {
-        File file = new File("src/student/users.csv");
-
         List<User> users = new ArrayList<>();
+        File file = new File(USER_FILE_PATH);
+
+        if (!file.exists()) return users;
 
         try (Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNext()) {
+            while (scanner.hasNextLine()) {
                 String[] split = scanner.nextLine().split(",");
-                users.add(new User(UUID.fromString(split[0]), split[1]));
+                if (split.length >= 2) {
+                    users.add(new User(UUID.fromString(split[0]), split[1]));
+                }
             }
-            return users;
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("❌ Failed to read users.csv", e);
         }
+
+        return users;
+    }
+
+    @Override
+    public void addUser(User user) {
+        try (FileWriter writer = new FileWriter(USER_FILE_PATH, true)) {
+            writer.write(user.getId() + "," + user.getName() + "\n");
+        } catch (IOException e) {
+            throw new IllegalStateException("❌ Failed to write user to users.csv", e);
+        }
+    }
+
+    @Override
+    public User getUserById(UUID id) {
+        return getUsers().stream()
+                .filter(user -> user.getId().equals(id))
+                .findFirst().orElse(null);
+    }
+
+    @Override
+    public User findUserByName(String name) {
+        return getUsers().stream()
+                .filter(user -> user.getName().equalsIgnoreCase(name))
+                .findFirst().orElse(null);
     }
 }
