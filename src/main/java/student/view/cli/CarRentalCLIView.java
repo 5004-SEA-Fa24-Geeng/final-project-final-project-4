@@ -43,8 +43,8 @@ public class CarRentalCLIView implements CarRentalViewInterface {
                 10. Export Available Cars to CSV
                 11. Book Car and Export Booking to CSV
                 12. Cancel Booking
-                13. Register New User       
-                14. Login User 
+                13. Register New User
+                14. Login User
                 0. Exit
                 ==============================
                 """);
@@ -315,7 +315,6 @@ public class CarRentalCLIView implements CarRentalViewInterface {
         }
     }
 
-    @Override
     public void cancelBooking(CarBookingService bookingService) {
         displayAllBookings(bookingService);
         System.out.print("➡️ Enter booking ID to cancel: ");
@@ -332,27 +331,29 @@ public class CarRentalCLIView implements CarRentalViewInterface {
         }
     }
 
+    @Override
     public void registerUser(UserService userService) {
-        System.out.print("Enter new user name: ");
+        System.out.print("Enter name to register: ");
         String name = scanner.nextLine();
+
         try {
-            User user = userService.register(name);
-            System.out.printf("✅ Registered user [%s] with ID %s%n", user.getName(), user.getId());
+            User user = userService.register(name.trim());
+            System.out.printf("✅ Registered user [%s] with ID: %s%n", user.getName(), user.getId());
         } catch (Exception e) {
             System.out.println("❌ " + e.getMessage());
         }
     }
 
+    @Override
     public void loginUser(UserService userService) {
-        System.out.print("Enter user name: ");
+        System.out.print("Enter name to login: ");
         String name = scanner.nextLine();
-        User user = userService.login(name);
+
+        User user = userService.login(name.trim());
         if (user == null) {
             System.out.println("❌ User not found.");
         } else {
-            System.out.printf("👋 Welcome back, %s (ID: %s)%n", user.getName(), user.getId());
+            System.out.printf("👋 Welcome back, %s! Your ID is: %s%n", user.getName(), user.getId());
         }
     }
-
-
 }
