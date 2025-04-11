@@ -153,4 +153,23 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
             JOptionPane.showMessageDialog(guiView, "❌ Export failed: " + e.getMessage());
         }
     }
+
+    public void handleRegisterUser(String name) {
+        try {
+            User user = userService.register(name);
+            guiView.setCurrentUser(user);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(guiView, "❌ " + e.getMessage());
+        }
+    }
+
+    public void handleLoginUser(String name) {
+        User user = userService.login(name);
+        if (user == null) {
+            JOptionPane.showMessageDialog(guiView, "❌ User not found.");
+        } else {
+            guiView.setCurrentUser(user);
+        }
+    }
+
 }

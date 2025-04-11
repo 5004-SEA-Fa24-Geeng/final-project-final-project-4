@@ -20,6 +20,7 @@ public class CarRentalGUIView extends JFrame {
     private JTable table;
     private DefaultTableModel tableModel;
     private JLabel statusLabel;
+    private User currentUser;
 
     private List<Car> pagedCars = List.of();
     private List<Car> currentDisplayedCars;
@@ -60,6 +61,12 @@ public class CarRentalGUIView extends JFrame {
         row2.add(searchKeywordBtn);
 
         JPanel row3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        JButton btnRegisterUser = new JButton("Register User");
+        JButton btnLoginUser = new JButton("Login User");
+        row3.add(btnRegisterUser);
+        row3.add(btnLoginUser);
+
         JButton viewUsersBtn = new JButton("View Users");
         JButton viewBookingsBtn = new JButton("View Bookings");
         row3.add(viewUsersBtn);
@@ -127,7 +134,28 @@ public class CarRentalGUIView extends JFrame {
             int maxPage = (int) Math.ceil((double) pagedCars.size() / PAGE_SIZE) - 1;
             if (currentPage < maxPage) showCarsPage(currentPage + 1);
         });
+
+        btnRegisterUser.addActionListener(e -> {
+            String name = JOptionPane.showInputDialog(this, "Enter name to register:");
+            if (name != null && !name.isBlank()) {
+                controller.handleRegisterUser(name.trim());
+            }
+        });
+
+        btnLoginUser.addActionListener(e -> {
+            String name = JOptionPane.showInputDialog(this, "Enter name to login:");
+            if (name != null && !name.isBlank()) {
+                controller.handleLoginUser(name.trim());
+            }
+        });
     }
+
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+        JOptionPane.showMessageDialog(this, "👋 Welcome " + user.getName());
+        statusLabel.setText("🟢 Logged in: " + user.getName());
+    }
+
 
     public void showCars(List<Car> cars) {
         this.pagedCars = cars;
