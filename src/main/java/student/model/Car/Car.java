@@ -1,6 +1,7 @@
 package student.model.Car;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Car {
     private String regNumber;
@@ -42,7 +43,31 @@ public class Car {
     }
 
     @Override
-    public String toString() {
-        return String.format("%s %s [%s] - $%s/day (%s)", brand, model, regNumber, rentalPricePerDay, isElectric ? "Electric" : "Gas");
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Car)) return false;
+        Car car = (Car) o;
+        return isElectric == car.isElectric &&
+                Objects.equals(regNumber, car.regNumber) &&
+                Objects.equals(rentalPricePerDay, car.rentalPricePerDay) &&
+                brand == car.brand &&
+                Objects.equals(model, car.model);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(regNumber, rentalPricePerDay, brand, isElectric, model);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s [%s] - $%s/day (%s)",
+                brand,
+                model,
+                regNumber,
+                rentalPricePerDay,
+                isElectric ? "Electric" : "Gas"
+        );
+    }
+
 }
