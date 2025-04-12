@@ -58,4 +58,23 @@ class UserServiceTest {
         // Verify that no user is found (null is returned)
         assertNull(user);
     }
+
+    @Test
+    void testRegisterNewUserSuccess() {
+        User newUser = userService.register("NewUser");
+        assertNotNull(newUser);
+        assertEquals("NewUser", newUser.getName());
+
+        User found = userService.login("NewUser");
+        assertNotNull(found);
+        assertEquals(newUser.getId(), found.getId());
+    }
+
+    @Test
+    void testRegisterExistingUserThrowsException() {
+        assertThrows(IllegalStateException.class, () -> {
+            userService.register("James");
+        });
+    }
+
 }
