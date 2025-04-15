@@ -196,151 +196,152 @@ By isolating user interaction management in the controller, the system maintains
 
 ```mermaid
 classDiagram
+    class Main {
+        +main(String[] args)
+    }
 
-%% ======= User Layer =======
-class User {
-  - UUID id
-  - String name
-  + getId()
-  + setId(UUID id)
-  + getName()
-  + setName(String name)
-}
+    %% Controllers
+    class CarRentalCLIController {
+        +run()
+    }
+    
+    class CarRentalGUIController {
+        +run()
+        +handleViewAvailableCars()
+        +handleViewElectricCars()
+        +handleSortByPrice()
+        +handleFilterByPrice()
+        +handleSearchByKeyword()
+        +handleViewUsers()
+        +handleViewBookings()
+        +handleBookCar(Car)
+        +handleCancelBooking(CarBooking)
+        +handleExportBookings()
+        +handleRegisterUser(String)
+        +handleLoginUser(String)
+    }
 
-class UserRepository {
-  + getUsers()
-}
+    %% Views
+    class CarRentalCLIView {
+        +displayMenu()
+        +getUserOption()
+        +displayInvalidOption()
+        +bookCar(UserService, CarBookingService)
+        +exportAvailableCarsToCSV(CarBookingService)
+        +displayUserBookings(UserService, CarBookingService)
+        +displayAllBookings(CarBookingService)
+        +displayAvailableCars(CarBookingService, boolean)
+        +displayCarsSortedByPrice(CarService)
+        +displayCarsByPriceRange(CarService)
+        +displayCarsByKeyword(CarService)
+        +cancelBooking(CarBookingService)
+        +registerUser(UserService)
+        +loginUser(UserService)
+    }
 
-class UserArrayRepository {
-  + getUsers()
-}
+    class CarRentalGUIView {
+        +setCurrentUser(User)
+        +showCars(List)
+        +showBookings(List)
+        +showUsers(List)
+        +updatePagination(int, int, int)
+        +setStatus(String)
+    }
 
-class UserFileRepository {
-  + getUsers()
-}
+    %% Models
+    class CarBookingService {
+        +bookCar(User, String)
+        +getBookings()
+        +cancelBooking(UUID)
+    }
 
-class UserService {
-  - UserRepository userRepository
-  + getUsers()
-  + getUserById(UUID id)
-}
+    class CarService {
+        +getAllCars()
+        +getAllElectricCars()
+        +sortCarsByPrice()
+        +getCarsByPriceRange(BigDecimal, BigDecimal)
+        +searchCars(String)
+    }
 
-UserArrayRepository --|> UserRepository
-UserFileRepository --|> UserRepository
-UserService --> UserRepository
+    class CarBookingRepository {
+        +getCarBookings()
+        +book(CarBooking)
+        +cancelCarBooking(UUID)
+    }
 
-%% ======= Car Layer =======
-class Car {
-  - String regNumber
-  - BigDecimal rentalPricePerDay
-  - Brand brand
-  - boolean isElectric
-  + getRegNumber()
-  + setRegNumber(String regNumber)
-  + getRentalPricePerDay()
-  + setRentalPricePerDay(BigDecimal price)
-  + getBrand()
-  + setBrand(Brand brand)
-  + isElectric()
-  + setElectric(boolean electric)
-}
+    class CarRepository {
+        +getAllCars()
+    }
 
-class Brand {
-  <<enum>>
-  TESLA
-  VW
-  MERCEDES
-  AUDI
-}
+    class UserService {
+        +getUsers()
+        +getUserById(UUID)
+        +login(String)
+        +register(String)
+    }
 
-class CarRepository {
-  + getAllCars()
-}
+    class UserRepository {
+        +getUsers()
+        +getUserById(UUID)
+        +addUser(User)
+        +findUserByName(String)
+    }
 
-class CarService {
-  - CarRepository carRepository
-  + getAllCars()
-  + getCar(String regNumber)
-  + getAllElectricCars()
-  + sortCarsByPrice()
-  + getCarsByPriceRange(BigDecimal min, BigDecimal max)
-  + searchCars(String keyword)
-}
+    class Car {
+        +getRegNumber()
+        +getRentalPricePerDay()
+        +getBrand()
+        +isElectric()
+        +getModel()
+    }
 
-CarService --> CarRepository
+    class User {
+        +getId()
+        +getName()
+    }
 
-%% ======= Booking Layer =======
-class CarBooking {
-  - UUID bookingId
-  - User user
-  - Car car
-  - LocalDateTime bookingTime
-  - boolean isCanceled
-  + getBookingId()
-  + getUser()
-  + getCar()
-  + getBookingTime()
-  + isCanceled()
-  + setCanceled(boolean canceled)
-}
+    class CarBooking {
+        +getBookingId()
+        +getUser()
+        +getCar()
+        +getBookingTime()
+        +isCanceled()
+    }
 
-class CarBookingRepository {
-  + getCarBookings()
-  + book(CarBooking carBooking)
-  + cancelCarBooking(UUID bookingId)
-}
+    %% Grouping Relations
+    %% Controllers
+    Main --> CarRentalCLIController
+    Main --> CarRentalGUIController
 
-class CarBookingService {
-  - CarBookingRepository bookingRepository
-  - CarService carService
-  + bookCar(User user, String regNumber)
-  + getUserBookedCars(UUID userId)
-  + getAvailableCars()
-  + getAvailableElectricCars()
-  + getBookings()
-  + cancelBooking(UUID bookingId)
-}
+    %% Views and Controllers
+    CarRentalCLIController --> CarRentalCLIView
+    CarRentalGUIController --> CarRentalGUIView
 
-CarBookingService --> CarBookingRepository
-CarBookingService --> CarService
-CarBooking --> User
-CarBooking --> Car
+    %% Controllers and Services
+    CarRentalCLIController --> CarService
+    CarRentalCLIController --> CarBookingService
+    CarRentalCLIController --> UserService
+    CarRentalGUIController --> CarService
+    CarRentalGUIController --> CarBookingService
+    CarRentalGUIController --> UserService
 
-%% ======= Controller and View =======
-class CarRentalController {
-  - CarService carService
-  - CarBookingService bookingService
-  - UserService userService
-  - CarRentalView view
-  + run()
-}
+    %% Views and Services
+    CarRentalCLIView --> UserService
+    CarRentalCLIView --> CarBookingService
+    CarRentalCLIView --> CarService
+    CarRentalGUIView --> UserService
+    CarRentalGUIView --> CarBookingService
+    CarRentalGUIView --> CarService
 
-class CarRentalView {
-  - Scanner scanner
-  + displayMenu()
-  + getUserOption()
-  + displayInvalidOption()
-  + bookCar(UserService, CarBookingService)
-  + exportAvailableCarsToCSV(CarBookingService)
-  + exportBookingToCSV(CarBooking)
-  + bookCarAndExport(UserService, CarBookingService)
-  + displayAllUsers(UserService)
-  + displayAvailableCars(CarBookingService, boolean isElectric)
-  + displayUserBookings(UserService, CarBookingService)
-  + displayAllBookings(CarBookingService)
-  + displayCarsSortedByPrice(CarService)
-  + displayCarsByPriceRange(CarService)
-  + displayCarsByKeyword(CarService)
-}
+    %% Services and Repositories
+    CarService --> CarRepository
+    CarBookingService --> CarBookingRepository
+    CarBookingService --> CarService
+    UserService --> UserRepository
 
-CarRentalController --> CarService
-CarRentalController --> CarBookingService
-CarRentalController --> UserService
-CarRentalController --> CarRentalView
-
-CarRentalView --> CarService
-CarRentalView --> CarBookingService
-CarRentalView --> UserService
+    %% Models
+    CarBooking --> User
+    CarBooking --> Car
 ```
 
 

@@ -128,22 +128,24 @@ The development work will be strictly divided into modules according to the MVC 
 
 #### Lucy: Backend core module development
 
-- [ ] Responsible for designing and implementing the model layer (Car, User, Booking, Brand)
-- [ ] Write the repository layer code to implement CSV/JSON file reading and writing and data persistence
-- Model: Car
+- [ ] Responsible for designing the overall architecture of the system.
+- [ ] Develop the Car model and associated functionalities.
+- [ ] Implement the graphical user interface (GUI).
+- [ ] Testing: Responsible for writing unit tests for the Car model and GUI, ensuring the correctness of data handling, user interface functionality, and data persistence.
 
 #### Echo: Business logic and control layer
 
-- [ ] Develop the service layer to implement business logic such as vehicle sorting, filtering, keyword search, etc. 
-- [ ] Write the control layer (CarRentalController) to process user input and coordinate various service calls
-- Model: booking
+- [ ] Develop the service layer to implement business logic.
+- [ ] Write the control layer (CarRentalController) to process user input and coordinate the interaction between various service components.
+- [ ] Develop the Booking model and associated functionalities.
+- [ ] Testing: Responsible for writing unit tests for service layer functionalities and control flow to ensure business logic works as expected.
 
 #### Chichi: View layer and integration testing
 
-- [ ] Implement the view layer (CLI interface), design menus, interaction processes
-- [ ] Responsible for integration testing, debugging and document organization to ensure the smooth operation of the overall system
-- Model: User
-
+- [ ] Implement the view layer with a command-line interface (CLI), designing menus and user interaction processes.
+- [ ] Develop the User model and associated functionalities.
+- [ ] Oversee document organization to ensure seamless operation of the entire system.
+- [ ] Testing: Responsible for writing unit tests for the view layer and user model, ensuring the correct functionality of user interaction processes and data handling.
 
 
 
