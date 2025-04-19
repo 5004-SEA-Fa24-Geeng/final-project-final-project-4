@@ -20,7 +20,14 @@ import java.util.UUID;
  */
 public class CarBookingService {
 
+    /**
+     * Repository for storing and retrieving car bookings in memory.
+     */
     private final CarBookingRepository carBookingRepository;
+
+    /**
+     * Service used to retrieve all cars and electric cars for availability checks.
+     */
     private final CarService carService;
 
     /**
