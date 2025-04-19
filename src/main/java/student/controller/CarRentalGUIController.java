@@ -25,9 +25,24 @@ import java.util.UUID;
  */
 public class CarRentalGUIController implements CarRentalControllerInterface {
 
+    /**
+     * Provides car-related operations such as retrieval, filtering, and sorting.
+     */
     private final CarService carService;
+
+    /**
+     * Handles booking operations, including creation, cancellation, and availability checks.
+     */
     private final CarBookingService bookingService;
+
+    /**
+     * Manages user-related logic such as registration and login.
+     */
     private final UserService userService;
+
+    /**
+     * The graphical user interface used to display data and capture user interactions.
+     */
     private final CarRentalGUIView guiView;
 
     /**
