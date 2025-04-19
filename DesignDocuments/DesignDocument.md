@@ -375,20 +375,6 @@ In the Car Rental System, error handling is implemented to ensure robustness, us
 
 
 
-# Tests
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Future Improvements
 
 While the current Car Rental System provides a fully functional command-line application for car rental operations, there are several areas for future improvement and enhancement:
@@ -399,22 +385,6 @@ While the current Car Rental System provides a fully functional command-line app
 - **Booking Management Enhancement**: Allow users to modify existing bookings (e.g., change the rental car or dates) instead of only creating and canceling bookings.
 - **Real-time Availability Checking**: Add real-time car availability status updates to prevent double bookings, especially in a multi-user environment.
 - **Car Return and Rental Period**: Extend the booking model to include a rental period (start date and end date) and allow users to "return" cars.
-
-
-
-# Reflection/Retrospective
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
