@@ -28,6 +28,8 @@ All functionalities are organized under the MVC architecture to promote clear se
 
 The application must support basic car rental operations such as listing available cars, handling bookings, and displaying users and their associated bookings. 
 
+It also enables exporting car and booking data into CSV files. Proper input validation and error handling are included to ensure robustness and smooth user interactions.
+
 | Feature                            | Description                                                  |
 | ---------------------------------- | ------------------------------------------------------------ |
 | Display Main Menu                  | Show a command-line menu for user interaction.               |
@@ -45,30 +47,33 @@ The application must support basic car rental operations such as listing availab
 
 ## Additional Features
 
-To enhance usability, the system additionally supports sorting cars by rental price, filtering cars by price range, searching by keywords, and exporting car and booking data into CSV files. Proper input validation and error handling are included to ensure robustness and smooth user interactions.
+To enhance usability, the system additionally supports sorting cars by rental price, filtering cars by price range, searching by keywords, providing a graphical user interface (GUI), and allowing user registration and login.
 
 | Feature                        | Description                                                  |
 | ------------------------------ | ------------------------------------------------------------ |
 | Sort Cars by Price (Ascending) | Display available cars sorted by their rental price in ascending order. |
 | Filter Cars by Price Range     | Allow users to input a minimum and maximum price and view cars within that range. |
 | Search Cars by Keyword         | Allow users to search cars based on brand, registration number, or other attributes. |
+| Graphical User Interface (GUI) | Provide a user-friendly graphical interface for easy interaction with the system. |
+| User Registration & Login      | Allow users to create accounts and securely log into the system to access features. |
 
 
 
 # Class Design
 
-The Car Rental System adopts a modular and layered class design, following object-oriented programming (OOP) principles and the Model-View-Controller (MVC) architectural pattern.
+The Car Rental System adopts a modular and layered class design, following object-oriented programming (OOP) principles and the **Model-View-Controller (MVC)** architectural pattern.
 
 At a high level, the system is organized into distinct layers, each with a clear responsibility:
 
-- **Model Layer**: Defines the core business entities (User, Car, CarBooking) and manages data operations through repositories and services.  
-  Service classes (CarService, UserService, CarBookingService) encapsulate business logic and interact with data repositories to ensure a clean separation between data storage and business operations.
-  
-- **View Layer**: Contains the `CarRentalView` class, which handles all user interface interactions through the command-line interface (CLI).  
-  It is responsible for displaying menus, capturing user input, and presenting outputs such as car listings, booking confirmations, and error messages.
-  
-- **Controller Layer**: The `CarRentalController` class acts as the application’s coordinator.  
-  It manages the overall flow of user interaction by invoking the appropriate services and updating the view based on user actions.
+- **Model Layer**: Defines the core domain entities (`User`, `Car`, `CarBooking`) and manages data through repositories and services.
+  Repository classes (e.g., `UserFileRepository`, `CarFileRepository`) handle persistent storage (CSV-based), while service classes (`CarService`, `UserService`, `CarBookingService`) encapsulate business logic and provide operations such as searching, filtering, booking, and user registration.
+- **View Layer**: Provides both **CLI** and **GUI** interfaces for user interaction.
+  - `CarRentalCLIView` handles text-based interaction through the command-line.
+  - `CarRentalGUIView` is a graphical interface built with Swing, offering modern UI components like tables, buttons, and search fields. Both views present data, collect user input, and display results and feedback.
+- **Controller Layer**: Includes two controllers:
+  - `CarRentalCLIController` for command-line interaction.
+  - `CarRentalGUIController` for GUI event handling. These controllers coordinate between view and services, handling user actions, executing logic, and updating the interface accordingly.
+     All controllers implement the shared `CarRentalControllerInterface`, allowing unified application entry.
 
 
 
@@ -78,30 +83,28 @@ At a high level, the system is organized into distinct layers, each with a clear
 
 ### Model Layer
 
-The Model layer defines the core entities and business data for the Car Rental System. 
+The **Model Layer** defines the core data structures and domain logic for the Car Rental System. It is organized into three main domains—**Cars**, **Users**, and **Bookings**—with supporting utility classes that enhance modularity and code reuse.
 
-It consists of three main domains:
+1. **Car Models**: Manage all vehicle-related data, including registration number, brand, daily rental price, electric status, and model. Car data is loaded from a CSV file through `CarFileRepository`, which implements the `CarRepository` interface. Business logic like sorting, price filtering, and keyword-based search is provided by `CarService`.
+2. **User Models**: Represent registered users, each identified by a UUID and name. The system supports pluggable user data sources via the `UserRepository` interface, with implementations including `UserArrayRepository` (in-memory) and `UserFileRepository` (CSV-based). The `UserService` handles user-related operations such as registration, login, and lookup by ID or name.
+3. **Booking Models**: Represent bookings made by users. Each booking tracks the user, selected car, booking timestamp, and cancellation status. All bookings are stored in memory via `CarBookingRepository`, and managed through `CarBookingService`, which provides booking creation, cancellation, and availability logic.
+4. **Utility Classes**: Located under the `student.model.utils` package, utility classes offer general-purpose logic shared across services. For example, the `CarFilterEngine` class encapsulates reusable filtering and sorting algorithms for car lists, including sorting by price, filtering by price range, and keyword-based search. This design promotes separation of concerns and keeps service classes focused and maintainable.
 
-1. **Car Models**: Manage all information related to vehicles, including their attributes (e.g., registration number, brand, rental price, and electric status). Business logic for sorting, filtering, and searching cars is encapsulated in service classes to ensure clean separation between data and operations.
-
-2. **User Models**: Represent users of the system. The design supports multiple data sources through a repository interface, allowing users to be retrieved either from static arrays or dynamically loaded CSV files. Service classes handle user-related operations such as listing users and finding users by ID.
-
-3. **Booking Models**: Represent car bookings made by users. Each booking stores details like the booking ID, user, car, booking time, and cancellation status. Bookings are managed in memory with functionality to create, list, and cancel bookings, ensuring dynamic interaction between users and available cars.
-
-The Model layer follows object-oriented principles and uses interfaces (such as `UserRepository`) to promote flexibility and extensibility. Business logic is cleanly separated into service classes (`CarService`, `UserService`, `CarBookingService`), which ensures maintainability and scalability of the system.
+The Model Layer is interface-oriented and service-driven, ensuring loose coupling between data access and business rules. All core logic resides in services (`CarService`, `UserService`, `CarBookingService`), promoting high cohesion, modularity, and testability.
 
 
 
 #### Car Models
 
-Manage car information and provide functionality to retrieve, sort, and search cars.
+Manage car information and provide functionality to retrieve, sort, filter, and search available cars.
 
-| Class           | Description                                                  | Key Functions                                                |
-| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `Car`           | Represents a car available for rental, with registration number, brand, daily price, and electric status. | - `getRegNumber()`, `setRegNumber()` <br />- `getRentalPricePerDay()`, `setRentalPricePerDay()` <br />- `getBrand()`, `setBrand()` <br />- `isElectric()`, `setElectric()` |
-| `Brand`         | Enum representing different car brands (TESLA, VW, MERCEDES, AUDI). | (Enum values only)                                           |
-| `CarRepository` | Provides access to a predefined static list of cars.         | - `getAllCars()`                                             |
-| `CarService`    | Provides business logic for car operations such as retrieval, search, sorting, and filtering. | - `getAllCars()` <br />- `getCar(String regNumber)` <br />- `getAllElectricCars()` <br />- `sortCarsByPrice()` <br />- `getCarsByPriceRange(BigDecimal min, BigDecimal max)` <br />- `searchCars(String keyword)` |
+| Class               | Description                                                  | Key Functions                                                |
+| ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `Car`               | Represents a rental car with registration number, brand, price per day, model, and electric status. | `getRegNumber()`, `getRentalPricePerDay()`, `getBrand()`, `isElectric()`, `getModel()` |
+| `Brand`             | Enum representing various car brands (TESLA, AUDI, MERCEDES, etc.). | Enum constants                                               |
+| `CarRepository`     | Interface for accessing car data.                            | `getAllCars()`                                               |
+| `CarFileRepository` | Loads car data from a CSV file (`data/cars.csv`) and implements `CarRepository`. | `getAllCars()`                                               |
+| `CarService`        | Provides business logic for retrieving, searching, sorting, and filtering cars. | `getAllCars()`, `getAllElectricCars()`, `getCar(String)`, `sortCarsByPrice()`, `getCarsByPriceRange(BigDecimal, BigDecimal)`, `searchCars(String)` |
 
 
 
@@ -109,13 +112,13 @@ Manage car information and provide functionality to retrieve, sort, and search c
 
 Manage user information and provide functionality to retrieve users from different data sources.
 
-| Class                 | Description                                                  | Key Functions                                           |
-| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------- |
-| `User`                | Represents a user with a unique ID and name.                 | - `getId()`, `setId()` <br />- `getName()`, `setName()` |
-| `UserRepository`      | Interface that defines methods for accessing user data.      | - `getUsers()`                                          |
-| `UserArrayRepository` | Provides a static array-based implementation of `UserRepository`. | - `getUsers()`                                          |
-| `UserFileRepository`  | Provides a file-based implementation of `UserRepository` that loads users from a CSV file. | - `getUsers()`                                          |
-| `UserService`         | Provides business logic for accessing and searching user information. | - `getUsers()` <br />- `getUserById(UUID id)`           |
+| Class                 | Description                                              | Key Functions                                                |
+| --------------------- | -------------------------------------------------------- | ------------------------------------------------------------ |
+| `User`                | Represents a system user with a UUID and a name.         | `getId()`, `getName()`                                       |
+| `UserRepository`      | Interface for accessing user data.                       | `getUsers()`, `getUserById(UUID)`, `findUserByName(String)`, `addUser(User)` |
+| `UserArrayRepository` | In-memory repository implementation, useful for testing. | Same as above                                                |
+| `UserFileRepository`  | CSV-backed user data storage (`data/users.csv`).         | Same as above                                                |
+| `UserService`         | Handles registration, login, and lookup of users.        | `getUsers()`, `getUserById(UUID)`, `register(String)`, `login(String)` |
 
 
 
@@ -125,9 +128,19 @@ Manage car bookings, including booking creation, cancellation, and querying user
 
 | Class                  | Description                                                  | Key Functions                                                |
 | ---------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `CarBooking`           | Represents a booking made by a user for a car, including booking time and cancellation status. | - `getBookingId()` <br />- `getUser()` <br />- `getCar()` <br />- `getBookingTime()` <br />- `isCanceled()`, `setCanceled(boolean canceled)` |
-| `CarBookingRepository` | Stores and manages car bookings in memory.                   | - `getCarBookings()` <br />- `book(CarBooking carBooking)` <br />- `cancelCarBooking(UUID bookingId)` |
-| `CarBookingService`    | Provides business logic for booking cars, checking availability, listing bookings, and canceling bookings. | - `bookCar(User user, String regNumber)` <br />- `getUserBookedCars(UUID userId)` <br />- `getAvailableCars()` <br />- `getAvailableElectricCars()` <br />- `getBookings()` <br />- `cancelBooking(UUID bookingId)` |
+| `CarBooking`           | Represents a car booking with associated user, car, time, and cancellation status. | `getBookingId()`, `getUser()`, `getCar()`, `getBookingTime()`, `isCanceled()`, `setCanceled(boolean)` |
+| `CarBookingRepository` | In-memory repository for managing bookings.                  | `getCarBookings()`, `book(CarBooking)`, `cancelCarBooking(UUID)` |
+| `CarBookingService`    | Provides booking logic including availability check, booking, listing, and cancellation. | `bookCar(User, String)`, `getAvailableCars()`, `getAvailableElectricCars()`, `getUserBookedCars(UUID)`, `getBookings()`, `cancelBooking(UUID)` |
+
+
+
+#### Utility Classes
+
+The utility layer provides reusable helper functionality that supports the business logic in the service layer without being tied to specific data or domain models. In this system, the `CarFilterEngine` class encapsulates common filtering, sorting, and searching operations for car collections. This separation of concerns improves code clarity, encourages reuse, and keeps service classes focused on core business logic.
+
+| Class             | Description                                                  | Key Functions                                                |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `CarFilterEngine` | Utility class in `student.model.utils` that provides reusable methods for filtering and sorting cars. | `sortByPrice(List<Car>)`, `filterByPriceRange(List<Car>, min, max)`, `searchByKeyword(List<Car>, keyword)` |
 
 
 
@@ -135,64 +148,85 @@ Manage car bookings, including booking creation, cancellation, and querying user
 
 ### View Layer
 
-The View layer in the Car Rental System is responsible for managing all user interactions through a command-line interface (CLI).
+The **View Layer** is responsible for all user-facing interactions, providing two distinct interfaces:
 
-The `CarRentalView` class handles displaying menus, prompting for and reading user input, and presenting results or error messages to the user. It serves as the communication bridge between the user and the underlying system.
+- A command-line interface (CLI) via `CarRentalCLIView`
+- A graphical user interface (GUI) via `CarRentalGUIView`
 
-Key responsibilities of the View layer include:
-- Displaying the main menu and available options.
-- Prompting users to input selections, such as car registration numbers or user IDs.
-- Displaying available cars, user bookings, all bookings, and users.
-- Sorting and filtering cars based on price or keywords.
-- Exporting available cars and booking details to CSV files for record-keeping.
-- Providing appropriate success and error messages to guide the user.
+This separation of interface from logic ensures flexibility and modularity, allowing the system to support multiple frontends while sharing the same business logic.
 
-The View layer ensures that all system outputs are user-friendly and that inputs are correctly captured for further processing by the Controller. By isolating user interaction logic, the system maintains a clean separation of concerns, making it easier to adapt the interface or extend it to other platforms (such as a GUI or web application) in the future.
+All views are responsible for displaying data, capturing user input, presenting error and success messages, and triggering controller actions. Views are connected to their respective controllers and communicate indirectly with services.
 
-| Class           | Description                                                  | Key Functions                                                |
-| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `CarRentalView` | Handles all user interactions via command-line interface (CLI). Displays menus, takes input, shows available cars, bookings, users, and manages exporting data to CSV files. | - `displayMenu()` <br /><br />- `bookCar(UserService, CarBookingService)` <br />- `exportAvailableCarsToCSV(CarBookingService)` <br />- `exportBookingToCSV(CarBooking)` <br />- `bookCarAndExport(UserService, CarBookingService)` <br />- `displayAllUsers(UserService)` <br />- `displayAvailableCars(CarBookingService, boolean)` <br />- `displayUserBookings(UserService, CarBookingService)` <br />- `displayAllBookings(CarBookingService)` <br />- `displayCarsSortedByPrice(CarService)` <br />- `displayCarsByPriceRange(CarService)` <br />- `displayCarsByKeyword(CarService)` |
+#### Key Responsibilities
+
+- Displaying menus, car listings, bookings, users, and status messages.
+- Capturing user input such as car registration numbers, user IDs, price ranges, and search keywords.
+- Supporting operations like booking cars, canceling bookings, filtering/sorting/searching cars.
+- Providing feedback through success/error dialogs or console messages.
+- Exporting car and booking data to CSV files for persistence.
+- Enabling user login and registration in both CLI and GUI modes.
+- GUI view provides pagination, button-based interaction, and visual components for enhanced user experience.
+
+| Class                    | Description                                                  | Key Functions (selected)                                     |
+| ------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `CarRentalCLIView`       | Text-based CLI view implementation. Interacts with users via the console using prompts and printed output. | `displayMenu()`, `getUserOption()`, `bookCar(...)`, `displayCarsSortedByPrice(...)`, `exportAvailableCarsToCSV(...)`, `registerUser(...)`, `loginUser(...)`, `cancelBooking(...)` |
+| `CarRentalGUIView`       | GUI-based view using Swing. Provides a modern visual interface with buttons, tables, search box, pagination, and dialogs. | `setCurrentUser(...)`, `showCars(...)`, `showBookings(...)`, `showUsers(...)`, `updatePagination(...)`, graphical input/output dialogs for all core actions |
+| `CarRentalViewInterface` | Common interface for CLI views, defining user interaction methods for all major features. | Declares methods like `bookCar(...)`, `displayAllBookings(...)`, `registerUser(...)`, etc., used by CLI controller |
 
 
 
 ### Controller Layer
 
-The Controller layer in the Car Rental System is responsible for managing user interactions and coordinating between the View and Model layers.
+The **Controller Layer** is responsible for managing user interactions and orchestrating the application flow between the View and Model layers.
+ It connects user-facing actions to the system’s business logic by responding to UI events (from either CLI or GUI) and invoking the appropriate service operations.
 
-The `CarRentalController` class acts as the main entry point of the application. It connects the user interface (CLI menu) to the underlying business logic implemented in service classes.
+The system provides two distinct controller implementations:
 
-Key responsibilities of the controller include:
+- `CarRentalCLIController` for command-line-based interaction
+- `CarRentalGUIController` for graphical user interface control via buttons and events
 
-- Displaying the main menu to users.
-- Reading and processing user input.
-- Delegating tasks to the appropriate service layer (e.g., car booking, searching, filtering).
-- Managing the overall application flow and lifecycle (start, user interactions, exit).
+Both controllers implement the shared `CarRentalControllerInterface`, which standardizes the launching mechanism across interface types.
 
-The `run()` method operates a loop that continuously prompts users with available actions, processes their selections, and invokes corresponding functionalities. These functionalities include booking cars, viewing user-specific and all bookings, displaying available and electric cars, sorting cars by price, filtering cars within a price range, searching cars by keyword, and listing all registered users.
+#### Key Responsibilities
 
-By isolating user interaction management in the controller, the system maintains a clean separation of concerns, making the architecture more modular, extensible, and maintainable.
+- Starting and managing the overall application lifecycle via `run()`
+- Receiving user commands from the view layer
+- Delegating operations to service classes (e.g., booking, searching, canceling)
+- Updating the view based on results from the business layer
+- Managing error handling and user feedback
+- Supporting features like user registration/login, data export, filtering and sorting
 
-| Class                 | Description                                                  | Key Functions                                                |
-| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `CarRentalController` | Acts as the main controller connecting the View with the Service and Model layers. It handles user interactions, application flow, and delegates tasks to service classes based on user input. | - `CarRentalController(CarService carService, CarBookingService bookingService, UserService userService, CarRentalView view)` *(Constructor: Initializes the controller with service and view layers.)*  <br />- `run()` *(Starts the main loop to display the menu, read user input, and dispatch user actions to services and views.)* |
+In CLI mode, user interaction is handled via terminal prompts and input parsing. In GUI mode, interactions are event-driven (e.g., button clicks, dialogs), and results are displayed in real-time via Swing components.
+
+| Class                          | Description                                                  | Key Functions (selected)                                     |
+| ------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `CarRentalCLIController`       | CLI-based controller that manages input/output through a text interface. It interprets user selections from the menu and performs associated logic using services. | `run()`, handles menu-driven flow like booking, listing, searching, registering, logging in |
+| `CarRentalGUIController`       | GUI-based controller that reacts to button clicks, dialogs, and events. It updates the GUI view and communicates with services to handle business operations. | `handleBookCar(...)`, `handleSortByPrice()`, `handleSearchByKeyword(...)`, `handleLoginUser(...)`, `handleCancelBooking(...)`, etc. |
+| `CarRentalControllerInterface` | Interface that defines the `run()` method, allowing unified controller launching regardless of interface type. | `run()`                                                      |
+
+
 
 
 
 ## Relationships & UML
 
+The Car Rental System follows a layered, interface-driven architecture. The UML diagram below demonstrates the relationships between key components across all layers—Controller, View, and Model.
 
-
-| Relationship                                                 | Meaning                                                      |
+| Relationship                                                 | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `UserService → UserRepository`                               | `UserService` depends on an abstract `UserRepository` to retrieve user data. |
-| `UserArrayRepository`, `UserFileRepository` implement `UserRepository` | Two implementations of user data access: static array or file-based CSV. |
-| `CarService → CarRepository`                                 | `CarService` fetches car data from `CarRepository`.          |
-| `CarBookingService → CarBookingRepository`, `CarService`     | `CarBookingService` manages bookings and checks car availability. |
-| `CarBooking → Car`, `CarBooking → User`                      | Each booking associates a user with a car.                   |
-| `CarRentalController → Services + View`                      | The controller connects user actions with business logic and view rendering. |
-| `CarRentalView → Services`                                   | The view retrieves data and interacts with users based on service outputs. |
-
-
+| `Main → CarRentalCLIController`, `Main → CarRentalGUIController` | The entry point decides to launch either CLI or GUI mode and initializes the corresponding controller. |
+| `CarRentalCLIController → CarRentalCLIView`, `CarRentalGUIController → CarRentalGUIView` | Each controller connects to a specific view implementation to manage user interactions. |
+| `CarRentalCLIController`, `CarRentalGUIController → CarService` | Controllers delegate car-related operations (filtering, searching, sorting) to `CarService`. |
+| `CarRentalCLIController`, `CarRentalGUIController → CarBookingService` | Controllers invoke booking creation, cancellation, and lookup logic via `CarBookingService`. |
+| `CarRentalCLIController`, `CarRentalGUIController → UserService` | Controllers use `UserService` for user login, registration, and retrieval. |
+| `CarRentalCLIView → CarService`, `CarRentalCLIView → CarBookingService`, `CarRentalCLIView → UserService` | The CLI view directly interacts with services to perform tasks such as booking, listing cars, and managing users. |
+| `CarRentalGUIView → CarService`, `CarRentalGUIView → CarBookingService`, `CarRentalGUIView → UserService` | The GUI view uses services to retrieve and display data in a visual format. |
+| `CarService → CarRepository`                                 | `CarService` retrieves car data (from CSV) through the `CarRepository` interface. |
+| `UserService → UserRepository`                               | `UserService` accesses and modifies user data via `UserRepository` (supports array or file-based storage). |
+| `CarBookingService → CarBookingRepository`                   | `CarBookingService` stores and manages all booking records in memory. |
+| `CarBookingService → CarService`                             | Booking logic depends on `CarService` to check car availability. |
+| `CarBooking → User`, `CarBooking → Car`                      | Each booking is an association between a user and a car.     |
+| `CarService → CarFilterEngine (implicit)`                    | Though not shown in the diagram, car sorting/filtering logic is delegated to `CarFilterEngine`, a utility class in the `utils` package. |
 
 ```mermaid
 classDiagram
@@ -379,7 +413,6 @@ In the Car Rental System, error handling is implemented to ensure robustness, us
 
 While the current Car Rental System provides a fully functional command-line application for car rental operations, there are several areas for future improvement and enhancement:
 
-- **User Interface Enhancement**: Develop a graphical user interface (GUI) using JavaFX or Swing to improve user experience beyond the command line.
 - **Persistent Storage**: Replace the in-memory and CSV-based storage with a real database (e.g., MySQL, PostgreSQL) to handle larger volumes of data, enable concurrent access, and ensure data integrity.
 - **User Authentication and Authorization**: Implement user login and role-based access control (e.g., Admin vs. Customer) to secure sensitive operations such as managing bookings or cars.
 - **Booking Management Enhancement**: Allow users to modify existing bookings (e.g., change the rental car or dates) instead of only creating and canceling bookings.
