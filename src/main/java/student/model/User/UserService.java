@@ -42,10 +42,26 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Attempts to log in a user by name.
+     *
+     * @param name the name of the user to log in
+     * @return the matching {@link User}, or {@code null} if not found
+     */
     public User login(String name) {
         return userRepository.findUserByName(name);
     }
 
+    /**
+     * Registers a new user by name.
+     * <p>
+     * Throws an exception if a user with the same name already exists.
+     * </p>
+     *
+     * @param name the name of the new user
+     * @return the newly created {@link User}
+     * @throws IllegalStateException if a user with the same name already exists
+     */
     public User register(String name) {
         User existing = userRepository.findUserByName(name);
         if (existing != null) {
@@ -55,5 +71,4 @@ public class UserService {
         userRepository.addUser(newUser);
         return newUser;
     }
-
 }

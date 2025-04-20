@@ -15,13 +15,44 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Controller class for handling GUI-based interactions in the Car Rental System.
+ * <p>
+ * This controller coordinates user actions triggered from the GUI
+ * (e.g., button clicks, dialogs) with underlying business logic
+ * provided by service classes.
+ * </p>
+ */
 public class CarRentalGUIController implements CarRentalControllerInterface {
 
+    /**
+     * Provides car-related operations such as retrieval, filtering, and sorting.
+     */
     private final CarService carService;
+
+    /**
+     * Handles booking operations, including creation, cancellation, and availability checks.
+     */
     private final CarBookingService bookingService;
+
+    /**
+     * Manages user-related logic such as registration and login.
+     */
     private final UserService userService;
+
+    /**
+     * The graphical user interface used to display data and capture user interactions.
+     */
     private final CarRentalGUIView guiView;
 
+    /**
+     * Constructs a GUI controller with required service and view components.
+     *
+     * @param carService      The service for car-related operations.
+     * @param bookingService  The service for booking-related operations.
+     * @param userService     The service for user account operations.
+     * @param guiView         The GUI view for user interaction.
+     */
     public CarRentalGUIController(CarService carService,
                                   CarBookingService bookingService,
                                   UserService userService,
@@ -32,24 +63,40 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         this.guiView = guiView;
     }
 
+    /**
+     * Launches the GUI application.
+     * Sets the controller as event listener and makes the GUI visible.
+     */
     @Override
     public void run() {
         guiView.setViewListener(this);
         guiView.setVisible(true);
     }
 
+    /**
+     * Displays all currently available cars.
+     */
     public void handleViewAvailableCars() {
         guiView.showCars(bookingService.getAvailableCars());
     }
 
+    /**
+     * Displays only available electric cars.
+     */
     public void handleViewElectricCars() {
         guiView.showCars(bookingService.getAvailableElectricCars());
     }
 
+    /**
+     * Displays cars sorted by rental price (ascending).
+     */
     public void handleSortByPrice() {
         guiView.showCars(carService.sortCarsByPrice());
     }
 
+    /**
+     * Filters cars by user-specified minimum and maximum rental price.
+     */
     public void handleFilterByPrice() {
         try {
             String minStr = JOptionPane.showInputDialog(guiView, "Minimum price:");
@@ -66,6 +113,9 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         }
     }
 
+    /**
+     * Searches cars based on a keyword entered by the user.
+     */
     public void handleSearchByKeyword() {
         String keyword = JOptionPane.showInputDialog(guiView, "Enter keyword:");
         if (keyword == null || keyword.isBlank()) return;
@@ -74,14 +124,25 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         guiView.showCars(result);
     }
 
+    /**
+     * Displays all registered users in the system.
+     */
     public void handleViewUsers() {
         guiView.showUsers(userService.getUsers());
     }
 
+    /**
+     * Displays all bookings in the system.
+     */
     public void handleViewBookings() {
         guiView.showBookings(bookingService.getBookings());
     }
 
+    /**
+     * Handles the booking process for a selected car by prompting the user to choose a user.
+     *
+     * @param selectedCar The car to be booked.
+     */
     public void handleBookCar(Car selectedCar) {
         if (selectedCar == null) {
             JOptionPane.showMessageDialog(guiView, "Please select a car to book.");
@@ -113,6 +174,11 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         }
     }
 
+    /**
+     * Cancels a selected booking.
+     *
+     * @param booking The booking to cancel.
+     */
     public void handleCancelBooking(CarBooking booking) {
         if (booking == null) {
             JOptionPane.showMessageDialog(guiView, "Please select a booking to cancel.");
@@ -133,6 +199,9 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         }
     }
 
+    /**
+     * Exports all bookings in the system to a CSV file.
+     */
     public void handleExportBookings() {
         List<CarBooking> bookings = bookingService.getBookings();
         try (FileWriter writer = new FileWriter("bookings_export.csv")) {
@@ -154,6 +223,11 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         }
     }
 
+    /**
+     * Registers a new user and sets them as the current user in the GUI.
+     *
+     * @param name The name of the user to register.
+     */
     public void handleRegisterUser(String name) {
         try {
             User user = userService.register(name);
@@ -163,6 +237,11 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         }
     }
 
+    /**
+     * Logs in an existing user by name.
+     *
+     * @param name The name of the user to log in.
+     */
     public void handleLoginUser(String name) {
         User user = userService.login(name);
         if (user == null) {
@@ -172,6 +251,12 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         }
     }
 
+    /**
+     * Books a selected car on behalf of a specific user.
+     *
+     * @param selectedCar The car to book.
+     * @param user        The user making the booking.
+     */
     public void handleBookCarAs(Car selectedCar, User user) {
         if (selectedCar == null) {
             JOptionPane.showMessageDialog(guiView, "Please select a car to book.");
@@ -187,6 +272,11 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         }
     }
 
+    /**
+     * Displays all active (non-canceled) bookings for the currently logged-in user.
+     *
+     * @param user The user whose bookings are to be shown.
+     */
     public void handleViewMyBookings(User user) {
         List<CarBooking> all = bookingService.getBookings();
         List<CarBooking> mine = all.stream()
@@ -201,6 +291,11 @@ public class CarRentalGUIController implements CarRentalControllerInterface {
         guiView.showBookings(mine);
     }
 
+    /**
+     * Searches for cars based on a provided keyword.
+     *
+     * @param keyword The search keyword to apply (brand, model, reg number).
+     */
     public void handleSearchByKeyword(String keyword) {
         List<Car> result = carService.searchCars(keyword.toLowerCase());
         guiView.showCars(result);

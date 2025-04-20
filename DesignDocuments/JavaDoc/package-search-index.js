@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"student"},{"l":"student.controller"},{"l":"student.model.Booking"},{"l":"student.model.Car"},{"l":"student.model.User"},{"l":"student.model.utils"},{"l":"student.view"},{"l":"student.view.cli"},{"l":"student.view.gui"}];updateSearchResults();

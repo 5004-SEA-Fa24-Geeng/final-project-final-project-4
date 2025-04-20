@@ -13,10 +13,29 @@ import java.util.UUID;
  */
 public class CarBooking {
 
+    /**
+     * A unique identifier for the booking.
+     */
     private UUID bookingId;
+
+    /**
+     * The user who made the booking.
+     */
     private User user;
+
+    /**
+     * The car that was booked.
+     */
     private Car car;
+
+    /**
+     * The timestamp indicating when the booking was created.
+     */
     private LocalDateTime bookingTime;
+
+    /**
+     * Indicates whether the booking has been canceled.
+     */
     private boolean isCanceled;
 
     /**
@@ -68,6 +87,11 @@ public class CarBooking {
         isCanceled = canceled;
     }
 
+    /**
+     * Returns a string representation of the booking, including user, car, time, and status.
+     *
+     * @return A string summarizing the booking.
+     */
     @Override
     public String toString() {
         return "CarBooking{" +
@@ -79,6 +103,12 @@ public class CarBooking {
                 '}';
     }
 
+    /**
+     * Checks if two bookings are equal based on ID, user, car, time, and cancellation status.
+     *
+     * @param o The object to compare with.
+     * @return {@code true} if equal, {@code false} otherwise.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,6 +120,11 @@ public class CarBooking {
                 Objects.equals(bookingTime, that.bookingTime);
     }
 
+    /**
+     * Computes a hash code based on booking ID, user, car, time, and status.
+     *
+     * @return The hash code.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(bookingId, user, car, bookingTime, isCanceled);

@@ -17,24 +17,84 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+/**
+ * Graphical User Interface (GUI) view for the Car Rental System.
+ * <p>
+ * This class builds a modern, dark-themed Swing-based interface that allows
+ * users to browse, search, book, cancel, and export car bookings.
+ * It represents the View layer in an MVC architecture and communicates with
+ * {@link student.controller.CarRentalGUIController} for user actions.
+ * </p>
+ *
+ * Features include:
+ * <ul>
+ *   <li>Car listing with pagination</li>
+ *   <li>Search, sort, and filter operations</li>
+ *   <li>User login and registration</li>
+ *   <li>Booking and cancellation</li>
+ *   <li>Exporting bookings to CSV</li>
+ * </ul>
+ */
 public class CarRentalGUIView extends JFrame {
+
+    /** Controller that handles all GUI event interactions. */
     private CarRentalGUIController controller;
+
+    /** Table component for displaying cars, users, or bookings. */
     private JTable table;
+
+    /** Backing model for the JTable. */
     private DefaultTableModel tableModel;
+
+    /** Status label displayed at the bottom of the GUI. */
     private JLabel statusLabel;
+
+    /** Label showing current pagination status (e.g., "Page 1 of 3"). */
     private JLabel pageLabel;
+
+    /** Pagination buttons for navigating car pages. */
     private JButton prevPageBtn, nextPageBtn;
+
+    /** User-related buttons: login, registration, and viewing personal bookings. */
     private JButton loginBtn, registerBtn, myBookingsBtn;
+
+    /** Action buttons: book a car, cancel a booking, export bookings. */
     private JButton bookBtn, cancelBtn, exportBtn;
+
+    /** Car browsing controls: show all, electric only, search, filter, sort. */
     private JButton viewCarsBtn, viewElectricBtn, searchBtn, filterBtn, sortBtn;
+
+    /** Text field for keyword search. */
     private JTextField searchField;
+
+    /** Currently logged-in user (null if not logged in). */
     private User currentUser;
+
+    /** All cars available for pagination display. */
     private List<Car> pagedCars = List.of();
+
+    /** Cars currently shown in the table (maybe a page subset). */
     private List<Car> currentDisplayedCars;
+
+    /** Bookings currently shown in the table. */
     private List<CarBooking> currentDisplayedBookings;
+
+    /** Index of the currently displayed car page. */
     private int currentPage = 0;
+
+    /** Maximum number of cars displayed per page. */
     private static final int PAGE_SIZE = 18;
 
+    /**
+     * Constructs the CarRental GUI view and initializes its layout and appearance.
+     * <p>
+     * This sets up the window size, title, theme, and calls the internal UI builder.
+     * </p>
+     *
+     * @param carService       the car service used for car-related actions (passed but not used directly here)
+     * @param bookingService   the booking service used for reservation logic
+     * @param userService      the user service for login/registration
+     */
     public CarRentalGUIView(CarService carService, CarBookingService bookingService, UserService userService) {
         setTitle("🚗 Car Rental System");
         setSize(1100, 700);
@@ -44,6 +104,13 @@ public class CarRentalGUIView extends JFrame {
         initUI();
     }
 
+    /**
+     * Applies a custom macOS-style light theme using Swing's UIManager settings.
+     * <p>
+     * This method sets fonts, colors, table styles, and control look-and-feel
+     * to give the application a consistent and modern aesthetic.
+     * </p>
+     */
     private void setUITheme() {
         UIManager.put("control", Color.WHITE);
         UIManager.put("info", Color.LIGHT_GRAY);
@@ -58,6 +125,14 @@ public class CarRentalGUIView extends JFrame {
         UIManager.put("Table.gridColor", new Color(210, 210, 210));
     }
 
+    /**
+     * Creates a uniformly styled JButton with custom color, cursor, hover effects,
+     * and a tooltip for enhanced UX.
+     *
+     * @param text    the button label text (can include emojis/icons)
+     * @param tooltip the tooltip text shown on hover
+     * @return the styled {@link JButton} instance
+     */
     private JButton createStyledButton(String text, String tooltip) {
         JButton button = new JButton(text);
         button.setForeground(Color.BLACK);
@@ -77,10 +152,30 @@ public class CarRentalGUIView extends JFrame {
         return button;
     }
 
+    /**
+     * Sets the controller that handles user actions triggered from the GUI.
+     *
+     * @param controller the controller to bind as listener
+     */
     public void setViewListener(CarRentalGUIController controller) {
         this.controller = controller;
     }
 
+    /**
+     * Initializes the entire GUI layout and component structure.
+     * <p>
+     * This method sets up:
+     * <ul>
+     *   <li>Main layout and color scheme</li>
+     *   <li>Top control panel with car filters, search, sort, etc.</li>
+     *   <li>Center table for displaying cars, users, or bookings</li>
+     *   <li>Bottom control panel for pagination, user login, and booking actions</li>
+     * </ul>
+     *
+     * It also registers all event listeners that connect UI buttons to controller logic
+     * in {@link student.controller.CarRentalGUIController}.
+     * </p>
+     */
     private void initUI() {
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBackground(Color.WHITE);
@@ -270,17 +365,33 @@ public class CarRentalGUIView extends JFrame {
         });
     }
 
+    /**
+     * Sets the currently logged-in user and updates the status bar.
+     *
+     * @param user the user who has logged in
+     */
     public void setCurrentUser(User user) {
         this.currentUser = user;
         JOptionPane.showMessageDialog(this, "👋 Welcome " + user.getName());
         statusLabel.setText("🟢 Logged in: " + user.getName() + " | Ready to book");
     }
 
+    /**
+     * Displays the given list of cars in the table with pagination.
+     * Resets current page to 0.
+     *
+     * @param cars the list of cars to display
+     */
     public void showCars(List<Car> cars) {
         this.pagedCars = cars;
         showCarsPage(0);
     }
 
+    /**
+     * Displays a specific page of the currently loaded car list.
+     *
+     * @param pageIndex the index of the page to show (0-based)
+     */
     private void showCarsPage(int pageIndex) {
         if (pagedCars == null || pagedCars.isEmpty()) {
             tableModel.setRowCount(0);
@@ -318,6 +429,11 @@ public class CarRentalGUIView extends JFrame {
 
     }
 
+    /**
+     * Displays a list of bookings in the table, including canceled status.
+     *
+     * @param bookings the list of car bookings to display
+     */
     public void showBookings(List<CarBooking> bookings) {
         currentDisplayedBookings = bookings;
         currentDisplayedCars = null;
@@ -335,6 +451,11 @@ public class CarRentalGUIView extends JFrame {
         statusLabel.setText("📦 Showing " + bookings.size() + " bookings");
     }
 
+    /**
+     * Displays all users in the table.
+     *
+     * @param users the list of users to display
+     */
     public void showUsers(List<User> users) {
         tableModel.setRowCount(0);
         tableModel.setColumnIdentifiers(new String[]{"User ID", "Name"});
@@ -344,6 +465,13 @@ public class CarRentalGUIView extends JFrame {
         statusLabel.setText("👤 Showing " + users.size() + " users");
     }
 
+    /**
+     * Updates the pagination label and enables/disables navigation buttons accordingly.
+     *
+     * @param page       the current page index
+     * @param totalPages the total number of pages
+     * @param totalCars  the total number of cars available
+     */
     public void updatePagination(int page, int totalPages, int totalCars) {
         currentPage = page;
         pageLabel.setText("Page " + (page + 1) + " of " + totalPages);
@@ -351,6 +479,11 @@ public class CarRentalGUIView extends JFrame {
         nextPageBtn.setEnabled(page + 1 < totalPages);
     }
 
+    /**
+     * Updates the status label text shown at the bottom of the interface.
+     *
+     * @param message the new status message
+     */
     public void setStatus(String message) {
         statusLabel.setText(message);
     }

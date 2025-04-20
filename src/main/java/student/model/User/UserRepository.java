@@ -14,7 +14,27 @@ public interface UserRepository {
      * @return a list of users
      */
     List<User> getUsers();
+
+    /**
+     * Retrieves a user by their unique ID.
+     *
+     * @param id the UUID of the user
+     * @return the matching {@link User}, or {@code null} if not found
+     */
     User getUserById(UUID id);
+
+    /**
+     * Adds a new user to the data source.
+     *
+     * @param user the user to add
+     */
     void addUser(User user);
+
+    /**
+     * Finds a user by name (case-insensitive).
+     *
+     * @param name the name to search for
+     * @return the matching {@link User}, or {@code null} if not found
+     */
     User findUserByName(String name);
 }

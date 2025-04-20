@@ -57,6 +57,11 @@ public class User {
         this.name = name;
     }
 
+    /**
+     * Returns a string representation of the user.
+     *
+     * @return a string containing the user ID and name
+     */
     @Override
     public String toString() {
         return "User{" +
@@ -65,6 +70,12 @@ public class User {
                 '}';
     }
 
+    /**
+     * Compares this user to another object for equality based on ID and name.
+     *
+     * @param o the object to compare with
+     * @return {@code true} if the users are equal, {@code false} otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,6 +83,11 @@ public class User {
         return Objects.equals(id, user.id) && Objects.equals(name, user.name);
     }
 
+    /**
+     * Returns a hash code based on the user's ID and name.
+     *
+     * @return the hash code
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, name);

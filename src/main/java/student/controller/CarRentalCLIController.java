@@ -7,13 +7,41 @@ import student.view.CarRentalViewInterface;
 
 import java.util.Scanner;
 
+/**
+ * Controller class for handling command-line interface (CLI) interactions
+ * in the Car Rental System.
+ * <p>
+ * This class serves as the coordinator between the CLI view and the
+ * underlying service layer. It listens for user commands, delegates
+ * operations to the appropriate service classes, and ensures proper
+ * application flow during runtime.
+ * </p>
+ */
 public class CarRentalCLIController implements CarRentalControllerInterface {
+
+    /** Service for car-related operations such as sorting and filtering. */
     private final CarService carService;
+
+    /** Service for managing bookings including availability and cancellation. */
     private final CarBookingService bookingService;
+
+    /** Service for user management such as registration and login. */
     private final UserService userService;
+
+    /** CLI view for displaying menus and interacting with the user. */
     private final CarRentalViewInterface view;
+
+    /** Scanner for reading console input (passed to view if needed). */
     private final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Constructs a CLI controller with the given services and view.
+     *
+     * @param carService      The car service used for vehicle-related logic.
+     * @param bookingService  The booking service used for managing reservations.
+     * @param userService     The user service used for handling user accounts.
+     * @param view            The CLI view interface for displaying output and reading input.
+     */
     public CarRentalCLIController(CarService carService,
                                   CarBookingService bookingService,
                                   UserService userService,
@@ -24,6 +52,13 @@ public class CarRentalCLIController implements CarRentalControllerInterface {
         this.view = view;
     }
 
+    /**
+     * Runs the main application loop for the CLI.
+     * <p>
+     * Continuously displays the main menu, accepts user input,
+     * and routes commands to corresponding service methods.
+     * </p>
+     */
     @Override
     public void run() {
         boolean running = true;
