@@ -20,26 +20,21 @@ import java.util.Scanner;
 
 /**
  * Entry point of the Car Rental System application.
- * <p>
- * This class is responsible for initializing the repositories, services, and controllers,
- * and launching the application in either CLI or GUI mode based on user input.
- * </p>
+ * <p>This class is responsible for initializing the repositories, services, and controllers,
+ * and launching the application in either CLI or GUI mode based on user input.</p>
  *
- * <p>
- * Supported modes:
+ * <p>Supported modes:</p>
  * <ul>
  *   <li><b>cli</b> - launches a command-line interface using {@link student.view.cli.CarRentalCLIView}</li>
  *   <li><b>gui</b> - launches a Swing-based GUI using {@link student.view.gui.CarRentalGUIView}</li>
  * </ul>
- * </p>
  */
 public class Main {
 
     /**
      * Initializes the application components and launches either CLI or GUI mode.
      *
-     * <p>
-     * Steps performed:
+     * <p>Steps performed:</p>
      * <ol>
      *   <li>Instantiates {@link CarRepository}, {@link CarService}</li>
      *   <li>Creates {@link CarBookingService} and {@link UserService}</li>
@@ -47,7 +42,6 @@ public class Main {
      *   <li>Creates corresponding view and controller based on the mode</li>
      *   <li>Starts the controller's main loop via {@code run()}</li>
      * </ol>
-     * </p>
      *
      * @param args command-line arguments (unused)
      */

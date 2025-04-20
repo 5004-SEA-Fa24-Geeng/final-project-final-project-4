@@ -26,7 +26,6 @@ import java.util.List;
  * {@link student.controller.CarRentalGUIController} for user actions.
  * </p>
  *
- * <p>
  * Features include:
  * <ul>
  *   <li>Car listing with pagination</li>
@@ -35,7 +34,6 @@ import java.util.List;
  *   <li>Booking and cancellation</li>
  *   <li>Exporting bookings to CSV</li>
  * </ul>
- * </p>
  */
 public class CarRentalGUIView extends JFrame {
 

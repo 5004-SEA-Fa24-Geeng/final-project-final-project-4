@@ -34,7 +34,9 @@ public class CarService {
     }
 
     /**
-     * Get all cars in the system.
+     * Retrieves all cars from the repository.
+     *
+     * @return list of all cars
      */
     public List<Car> getAllCars() {
         return carRepository.getAllCars();
@@ -55,7 +57,9 @@ public class CarService {
     }
 
     /**
-     * Get all electric cars in the system.
+     * Retrieves all electric cars from the repository.
+     *
+     * @return list of electric cars
      */
     public List<Car> getAllElectricCars() {
         return getAllCars().stream()
