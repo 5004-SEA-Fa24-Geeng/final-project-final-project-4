@@ -315,6 +315,15 @@ public class CarRentalCLIView implements CarRentalViewInterface {
         }
     }
 
+    /**
+     * Cancels a booking by prompting the user for a booking ID.
+     * <p>
+     * This method displays all current bookings, allows the user to enter the ID of
+     * the booking they wish to cancel, and then calls the booking service to perform the cancellation.
+     * </p>
+     *
+     * @param bookingService The booking service used to cancel the selected booking.
+     */
     public void cancelBooking(CarBookingService bookingService) {
         displayAllBookings(bookingService);
         System.out.print("➡️ Enter booking ID to cancel: ");
@@ -331,6 +340,15 @@ public class CarRentalCLIView implements CarRentalViewInterface {
         }
     }
 
+    /**
+     * Prompts the user to enter a name and attempts to register a new user.
+     * <p>
+     * If registration is successful, the system prints the new user's ID and confirmation message.
+     * If a user with the same name already exists, an error message is shown.
+     * </p>
+     *
+     * @param userService The user service used to register the user.
+     */
     @Override
     public void registerUser(UserService userService) {
         System.out.print("Enter name to register: ");
@@ -344,6 +362,15 @@ public class CarRentalCLIView implements CarRentalViewInterface {
         }
     }
 
+    /**
+     * Prompts the user to enter their name and attempts to log them in.
+     * <p>
+     * If a user with the entered name exists, a welcome message and their ID is shown.
+     * Otherwise, an error message is displayed indicating the user was not found.
+     * </p>
+     *
+     * @param userService The user service used to search for the user.
+     */
     @Override
     public void loginUser(UserService userService) {
         System.out.print("Enter name to login: ");
