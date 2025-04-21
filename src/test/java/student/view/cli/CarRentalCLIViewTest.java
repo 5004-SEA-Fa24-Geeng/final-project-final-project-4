@@ -91,8 +91,9 @@ class CarRentalCLIViewTest {
 
     @Test
     void bookCar() {
-        User user = userService.getUsers().get(0);
-        String regNumber = getNextAvailableRegNumber();
+        User user = userService.register("User_" + UUID.randomUUID());
+        Car car = bookingService.getAvailableCars().get(0);
+        String regNumber = car.getRegNumber();
         String userId = user.getId().toString();
 
         System.setIn(new ByteArrayInputStream((regNumber + "\n" + userId + "\n").getBytes()));
@@ -164,10 +165,9 @@ class CarRentalCLIViewTest {
 
     @Test
     void exportBookingToCSV() throws IOException {
-        User user = userService.getUsers().get(0);
-        String regNumber = getNextAvailableRegNumber();
-
-        UUID bookingId = bookingService.bookCar(user, regNumber);
+        User user = userService.register("User_" + UUID.randomUUID());
+        Car car = bookingService.getAvailableCars().get(0);
+        UUID bookingId = bookingService.bookCar(user, car.getRegNumber());
 
         CarBooking booking = bookingService.getBookings().stream()
                 .filter(b -> b.getBookingId().equals(bookingId))
@@ -178,7 +178,7 @@ class CarRentalCLIViewTest {
         File file = new File("booking_" + booking.getBookingId() + ".csv");
         assertTrue(file.exists());
         assertTrue(Files.readString(file.toPath()).contains(user.getName()));
-        file.delete();
+        file.delete(); // 清理
     }
 
     @Test
@@ -208,8 +208,9 @@ class CarRentalCLIViewTest {
 
     @Test
     void bookCarAndExport() throws IOException {
-        User user = userService.getUsers().get(0);
-        String regNumber = getNextAvailableRegNumber();
+        User user = userService.register("User_" + UUID.randomUUID());
+        Car car = bookingService.getAvailableCars().get(0);
+        String regNumber = car.getRegNumber();
         String userId = user.getId().toString();
 
         System.setIn(new ByteArrayInputStream((regNumber + "\n" + userId + "\n").getBytes()));
@@ -323,9 +324,9 @@ class CarRentalCLIViewTest {
 
     @Test
     void displayAllBookings() {
-        User user = userService.getUsers().get(0);
-        String regNumber = getNextAvailableRegNumber();
-        bookingService.bookCar(user, regNumber);
+        User user = userService.register("User_" + UUID.randomUUID());
+        Car car = bookingService.getAvailableCars().get(0);
+        bookingService.bookCar(user, car.getRegNumber());
 
         view.displayAllBookings(bookingService);
         String output = outputStream.toString();

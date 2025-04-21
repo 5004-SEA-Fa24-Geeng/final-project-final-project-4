@@ -13,6 +13,8 @@ public class MockGUIView extends CarRentalGUIView {
     public User lastUserSet;
     public String lastMessage = "";
     public List<CarBooking> lastBookingsShown;
+    public List<Car> lastCarsShown;
+    public List<User> lastUsersShown;
 
     public MockGUIView() {
         super(null, null, null);
@@ -25,7 +27,7 @@ public class MockGUIView extends CarRentalGUIView {
 
     @Override
     public void showCars(List<Car> cars) {
-        // Optional
+        this.lastCarsShown = cars;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class MockGUIView extends CarRentalGUIView {
 
     @Override
     public void showUsers(List<User> users) {
-        // Optional
+        this.lastUsersShown = users;
     }
 
     @Override
@@ -56,5 +58,4 @@ public class MockGUIView extends CarRentalGUIView {
     public void showMessageDialog(String message) {
         lastMessage = message;
     }
-
 }
