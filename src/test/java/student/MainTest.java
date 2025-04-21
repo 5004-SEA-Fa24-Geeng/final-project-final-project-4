@@ -39,9 +39,9 @@ class MainTest {
         t.start();
 
         try {
-            t.join(1000); // 最多等 1 秒
+            t.join(1000);
         } catch (InterruptedException ignored) {}
 
-        assertTrue(t.isAlive() || !t.isAlive()); // 主线程能走完就算通过
+        assertTrue(t.isAlive() || !t.isAlive());
     }
 }

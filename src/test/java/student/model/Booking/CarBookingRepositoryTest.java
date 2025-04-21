@@ -57,7 +57,7 @@ class CarBookingRepositoryTest {
         repository.book(booking);
         assertFalse(booking.isCanceled());
 
-        repository.cancelCarBooking(bookingId); // 正确取消
+        repository.cancelCarBooking(bookingId);
 
         // 从仓库中重新取出
         CarBooking canceled = repository.getCarBookings().stream()

@@ -178,7 +178,7 @@ class CarRentalCLIViewTest {
         File file = new File("booking_" + booking.getBookingId() + ".csv");
         assertTrue(file.exists());
         assertTrue(Files.readString(file.toPath()).contains(user.getName()));
-        file.delete(); // 清理
+        file.delete();
     }
 
     @Test
@@ -352,7 +352,7 @@ class CarRentalCLIViewTest {
 
     @Test
     void displayCarsByPriceRangeInvalidInput() {
-        System.setIn(new ByteArrayInputStream("abc\n123\n".getBytes())); // 非法输入
+        System.setIn(new ByteArrayInputStream("abc\n123\n".getBytes()));
         view.displayCarsByPriceRange(carService);
         assertTrue(outputStream.toString().contains("Invalid input for price range"));
     }

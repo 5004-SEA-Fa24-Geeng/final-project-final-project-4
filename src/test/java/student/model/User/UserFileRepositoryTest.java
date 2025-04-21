@@ -100,7 +100,6 @@ class UserFileRepositoryTest {
 
         assertThrows(IllegalStateException.class, () -> repository.addUser(user));
 
-        // 恢复环境
         file.delete();
         file.getParentFile().mkdirs();
         file.createNewFile();
@@ -137,7 +136,7 @@ class UserFileRepositoryTest {
         User user = new User(UUID.randomUUID(), "David");
         repository.addUser(user);
 
-        User found = repository.findUserByName("david"); // 小写搜索
+        User found = repository.findUserByName("david");
         assertNotNull(found);
         assertEquals("David", found.getName());
     }

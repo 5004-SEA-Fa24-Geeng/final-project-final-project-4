@@ -195,7 +195,7 @@ class CarRentalGUIControllerTest {
                 .filter(b -> b.getBookingId().equals(id))
                 .findFirst().orElseThrow();
 
-        controller.handleCancelBooking(booking); // 第一次取消
+        controller.handleCancelBooking(booking);
         assertTrue(booking.isCanceled());
 
         try (MockedStatic<JOptionPane> mocked = Mockito.mockStatic(JOptionPane.class)) {
@@ -206,7 +206,7 @@ class CarRentalGUIControllerTest {
                         return null;
                     });
 
-            controller.handleCancelBooking(booking); // 第二次触发提示
+            controller.handleCancelBooking(booking);
         }
     }
 
@@ -270,7 +270,7 @@ class CarRentalGUIControllerTest {
     @Test
     void shouldNotBookIfUserCancelsDialog() {
         Car car = bookingService.getAvailableCars().get(0);
-        int bookingsBefore = bookingService.getBookings().size(); // ✅ 记录之前的预约数
+        int bookingsBefore = bookingService.getBookings().size();
 
         try (MockedStatic<JOptionPane> mocked = Mockito.mockStatic(JOptionPane.class)) {
             mocked.when(() -> JOptionPane.showInputDialog(
@@ -333,7 +333,6 @@ class CarRentalGUIControllerTest {
             fail("Unexpected exception: " + e.getMessage());
         }
     }
-
 
     @Test
     void shouldHandleNoBookingsForUser() {

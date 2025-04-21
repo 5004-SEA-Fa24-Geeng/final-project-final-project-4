@@ -50,7 +50,7 @@ class CarBookingServiceTest {
         Car car = bookingService.getAvailableCars().get(0);
         bookingService.bookCar(user, car.getRegNumber());
 
-        List<Car> cars = bookingService.getUserBookedCars(user.getId()); // ✅ 改成 UUID
+        List<Car> cars = bookingService.getUserBookedCars(user.getId());
         assertEquals(1, cars.size());
         assertEquals(car.getRegNumber(), cars.get(0).getRegNumber());
     }
@@ -62,7 +62,7 @@ class CarBookingServiceTest {
         bookingService.bookCar(user, car.getRegNumber());
 
         List<Car> available = bookingService.getAvailableCars();
-        assertFalse(available.contains(car)); // 被预约了
+        assertFalse(available.contains(car));
     }
 
     @Test
@@ -75,7 +75,6 @@ class CarBookingServiceTest {
 
         assertTrue(allElectric.containsAll(available));
     }
-
 
     @Test
     void getBookings() {
@@ -91,7 +90,6 @@ class CarBookingServiceTest {
 
         assertTrue(hasBooking);
     }
-
 
     @Test
     void cancelBooking() {

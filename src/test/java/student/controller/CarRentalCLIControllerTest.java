@@ -152,7 +152,6 @@ class CarRentalCLIControllerTest {
 
         controller.run();
 
-        // 最后一次操作是 cancel
         assertEquals("cancelBooking", mockView.lastCalledMethod);
     }
 }

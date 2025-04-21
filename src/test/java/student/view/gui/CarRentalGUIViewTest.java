@@ -92,7 +92,7 @@ class CarRentalGUIViewTest {
 
     @Test
     void shouldUpdatePaginationCorrectly() {
-        guiView.updatePagination(0, 3, 54); // 模拟第 1 页，共 3 页
+        guiView.updatePagination(0, 3, 54);
 
         JLabel pageLabel = (JLabel) TestUtils.getPrivateField(guiView, "pageLabel");
         assertEquals("Page 1 of 3", pageLabel.getText());
@@ -204,7 +204,7 @@ class CarRentalGUIViewTest {
     @Test
     void shouldNavigateToNextPageUsingButton() {
         List<Car> cars = carService.getAllCars();
-        if (cars.size() < 20) return; // 保证有多页
+        if (cars.size() < 20) return;
         guiView.showCars(cars);
 
         JButton next = (JButton) TestUtils.getPrivateField(guiView, "nextPageBtn");
@@ -269,7 +269,7 @@ class CarRentalGUIViewTest {
         f.setAccessible(true);
         f.set(guiView, null);
 
-        btn.doClick(); // 应弹出“请登录”提示（可用 mock JOptionPane 捕捉）
+        btn.doClick();
     }
 
     @Test
@@ -289,7 +289,7 @@ class CarRentalGUIViewTest {
         f.setAccessible(true);
         f.set(guiView, null);
 
-        btn.doClick(); // 应提示未登录
+        btn.doClick();
     }
 
     @Test
@@ -299,29 +299,25 @@ class CarRentalGUIViewTest {
         User user = userService.register("U_" + UUID.randomUUID());
         guiView.setCurrentUser(user);
 
-        // ✅ 加载车辆数据到表格中
         guiView.showCars(carService.getAllCars());
 
-        // ✅ 获取并选中第一行
         JTable table = (JTable) TestUtils.getPrivateField(guiView, "table");
-        table.setRowSelectionInterval(0, 0); // now safe
+        table.setRowSelectionInterval(0, 0);
 
-        // ✅ 将 currentDisplayedCars 设置为 null
         Field f = guiView.getClass().getDeclaredField("currentDisplayedCars");
         f.setAccessible(true);
         f.set(guiView, null);
 
-        btn.doClick(); // 不应崩溃
+        btn.doClick();
     }
 
     @Test
     void shouldNotCancelOthersBooking() {
-        // 注册两个用户
         User u1 = userService.register("Owner_" + UUID.randomUUID());
         User u2 = userService.register("Intruder_" + UUID.randomUUID());
         Car car = bookingService.getAvailableCars().get(0);
 
-        bookingService.bookCar(u1, car.getRegNumber()); // u1 预定
+        bookingService.bookCar(u1, car.getRegNumber());
         List<CarBooking> bookings = bookingService.getBookings();
         CarBooking b = bookings.get(0);
 
@@ -350,8 +346,8 @@ class CarRentalGUIViewTest {
     @Test
     void shouldWarnWhenSearchFieldEnterEmpty() throws Exception {
         JTextField field = (JTextField) TestUtils.getPrivateField(guiView, "searchField");
-        field.setText("");  // 空内容
-        field.postActionEvent(); // 模拟回车
+        field.setText("");
+        field.postActionEvent();
     }
 
     @Test
@@ -369,7 +365,7 @@ class CarRentalGUIViewTest {
         JButton btn = (JButton) TestUtils.getPrivateField(guiView, "registerBtn");
         try (MockedStatic<JOptionPane> mocked = Mockito.mockStatic(JOptionPane.class)) {
             mocked.when(() -> JOptionPane.showInputDialog(guiView, "Enter name to register:")).thenReturn("   ");
-            btn.doClick(); // 不注册
+            btn.doClick();
         }
     }
 
@@ -394,6 +390,4 @@ class CarRentalGUIViewTest {
         table.clearSelection();
         btn.doClick();
     }
-
-
 }

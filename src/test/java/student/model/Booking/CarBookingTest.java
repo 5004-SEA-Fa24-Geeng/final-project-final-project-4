@@ -75,7 +75,6 @@ class CarBookingTest {
         CarBooking another = new CarBooking(bookingId, user, car, time);
         assertEquals(booking, another);
 
-        // 不同 ID 应视为不等
         CarBooking different = new CarBooking(UUID.randomUUID(), user, car, time);
         assertNotEquals(booking, different);
     }
