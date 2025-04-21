@@ -16,7 +16,7 @@ Car Rental System - MVC Structured Java Application
 ## Team Members
 
 - [Lucy(Minglu) Sun](https://github.com/ooodddee)
-- [Echo(Haunhuan) Yan](https://github.com/echoyanxx)
+- [Echo(Huanhuan) Yan](https://github.com/echoyanxx)
 - [Chichi Zhang](https://github.com/chichizhang0510)
 
 
